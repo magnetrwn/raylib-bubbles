@@ -1,9 +1,9 @@
 #include "window.hpp"
 
-GameWindow::GameWindow(const std::size_t width, const std::size_t height, const std::string& title, const std::size_t fps) 
-    : width(width), height(height), fps(fps), title(title) {
+GameWindow::GameWindow(const std::size_t width, const std::size_t height, const char* title, const std::size_t fps) 
+    : width(width), height(height), fps(fps) {
 
-    InitWindow(width, height, title.c_str());
+    InitWindow(width, height, title);
     SetTargetFPS(fps);
     font = LoadFontEx(DEFAULT_FONT_PATH, DEFAULT_FONT_SIZE, NULL, 0);
 }

@@ -10,9 +10,7 @@ file(GLOB PROJECT_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
 )
 
-add_compile_definitions(DEBUG)
-add_compile_definitions(DEFAULT_FONT_PATH="res/ct_prolamina.ttf")
-add_compile_definitions(DEFAULT_FONT_SIZE=48) # This is also the font to image scale
+#add_compile_definitions(DEBUG)
 
 if(MSVC)
     add_compile_options(/w4)
