@@ -1,6 +1,6 @@
 #include "window.hpp"
 
-GameWindow::GameWindow(const std::size_t width, const std::size_t height, const char* title, const std::size_t fps) 
+GameWindow::GameWindow(const int width, const int height, const char* title, const int fps) 
     : width(width), height(height), fps(fps) {
 
     InitWindow(width, height, title);
