@@ -1,8 +1,7 @@
-#include <cstdio>
-
 #include "window.hpp"
 
 int main(void) {
-    printf("Hello, world!\n");
+    GameWindow gw;
+    gw.run();
     return 0;
 }

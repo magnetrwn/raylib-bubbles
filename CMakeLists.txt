@@ -11,6 +11,8 @@ file(GLOB PROJECT_FILES
 )
 
 add_compile_definitions(DEBUG)
+add_compile_definitions(DEFAULT_FONT_PATH="res/ct_prolamina.ttf")
+add_compile_definitions(DEFAULT_FONT_SIZE=48) # This is also the font to image scale
 
 if(MSVC)
     add_compile_options(/w4)
@@ -23,12 +25,11 @@ add_executable(${PROJECT_NAME} ${PROJECT_FILES})
 target_include_directories(
     ${PROJECT_NAME}
     PUBLIC include
-    ${RAYLIB_INCLUDE_DIRS}
 )
 
 target_link_libraries(
     ${PROJECT_NAME}
-    ${RAYLIB_LIBRARIES}
+    PRIVATE ${raylib_LIBRARIES}
 )
 
 target_compile_features(
