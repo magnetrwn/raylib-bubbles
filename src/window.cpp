@@ -8,6 +8,12 @@ GameWindow::GameWindow(const int width, const int height, const char* title, con
     InitWindow(width, height, title);
     SetTargetFPS(fps);
     font = LoadFontEx(DEFAULT_FONT_PATH, DEFAULT_FONT_SIZE, nullptr, 0);
+    //bubble = LoadTexture("res/b_none.png");
+}
+
+GameWindow::~GameWindow() {
+    UnloadFont(font);
+    CloseWindow();
 }
 
 /* --- public --- */
@@ -15,13 +21,12 @@ GameWindow::GameWindow(const int width, const int height, const char* title, con
 void GameWindow::run() {
     while (!WindowShouldClose()) {
         BeginDrawing();
-        ClearBackground(DARKGREEN);
-        DrawTextEx(font, "What's UP! ~¿!", {24, 64}, font.baseSize, 1, GOLD);
+            ClearBackground(DARKGREEN);
+            DrawTextEx(font, "What's UP! ~¿!", {24, 64}, font.baseSize, 1, GOLD);
+            
+            DrawCircleV({100.0f, 200.0f}, 50.0f, LIGHTGRAY);
+            //DrawTexture(bubble, 100.0f - bubble.width / 2, 200.0f - bubble.height / 2, WHITE);
+
         EndDrawing();
     }
-}
-
-GameWindow::~GameWindow() {
-    UnloadFont(font);
-    CloseWindow();
 }

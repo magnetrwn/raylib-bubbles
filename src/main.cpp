@@ -1,9 +1,9 @@
 #include "board.hpp"
-//#include "window.hpp"
+#include "window.hpp"
 
 int main(void) {
-    //GameWindow gw;
+    GameWindow gw;
     GameBoard gb;
-    //gw.run();
+    gw.run();
     return 0;
 }

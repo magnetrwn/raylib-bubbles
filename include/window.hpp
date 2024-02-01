@@ -27,6 +27,8 @@ protected:
     int fps;
 
     Font font;
+
+    //Texture2D bubble; // TODO: make path constantexpr
 };
 
 #endif
