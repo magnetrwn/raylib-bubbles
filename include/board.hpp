@@ -1,7 +1,8 @@
 #ifndef BOARD_HPP_
 #define BOARD_HPP_
 
-#include <vector>
+#include <new>
+#include <stdexcept>
 
 class GameBoard {
 protected: 
@@ -26,28 +27,33 @@ protected:
             this->color = color;
         }
 
-        bool isColorNone() const {
+        bool empty() const {
             return color == Color::NONE;
         }
     };
 
-    int rows;
+    int rows; // TODO: using int everywhere for now, but should be size_t for best practice
     int cols;
 
-    std::vector<std::vector<Bubble>> board;
+    Bubble* board;
 
-    bool oob(const int row, const int col) const;
+    inline int hexAlign(const int row) const;
+    inline int hexGridSize(const int nRows = DEFAULT_ROWS) const;
+    inline bool oob(const int row, const int col) const;
+    inline int at(const int row, const int col) const;
+    inline void applyNbr(const int srcRow, const int srcCol, const int dstRow, const int dstCol);
 
-    void setNbrsBounded(const int srcRow, const int srcCol, const int dstRow, const int dstCol);
+    bool compare(const int row, const int col, const int rowOffset, const int colOffset) const;
 
 public:
     GameBoard(const int rows = DEFAULT_ROWS, const int cols = DEFAULT_COLS);
+    ~GameBoard();
 
-    bool compare(const int row, const int col, const int rowOffset, const int colOffset) const;
+    Bubble::Color get(const int row, const int col) const;
+    void set(const int row, const int col, const Bubble::Color color);
+
     bool shouldPop(const int row, const int col) const;
-    //bool shouldDrop(const int row, const int col) const;
-
-    void update(const int row, const int col, const Bubble::Color color);
+    bool shouldDrop(const int row, const int col) const;
 };
 
 #endif

@@ -1,5 +1,7 @@
 #include "window.hpp"
 
+/* --- initialization --- */
+
 GameWindow::GameWindow(const int width, const int height, const char* title, const int fps) 
     : width(width), height(height), fps(fps) {
 
@@ -7,6 +9,8 @@ GameWindow::GameWindow(const int width, const int height, const char* title, con
     SetTargetFPS(fps);
     font = LoadFontEx(DEFAULT_FONT_PATH, DEFAULT_FONT_SIZE, NULL, 0);
 }
+
+/* --- public --- */
 
 void GameWindow::run() {
     while (!WindowShouldClose()) {
