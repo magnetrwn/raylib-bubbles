@@ -14,4 +14,5 @@ zip -r "bubbles_build$(date +%s).zip" .
 mv bubbles_build*.zip ../
 mv compile_commands.json ../
 
+#LSAN_OPTIONS="verbosity=1:log_threads=1" ./bubbles
 ./bubbles

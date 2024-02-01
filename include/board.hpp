@@ -5,6 +5,18 @@
 #include <stdexcept>
 
 class GameBoard {
+public:
+    enum class BubbleColor { NONE, RED, YELLOW, BLUE };
+
+    GameBoard(const int rows = DEFAULT_ROWS, const int cols = DEFAULT_COLS);
+    ~GameBoard();
+
+    BubbleColor get(const int row, const int col) const;
+    void set(const int row, const int col, const BubbleColor color);
+
+    bool shouldPop(const int row, const int col) const;
+    bool shouldDrop(const int row, const int col) const;
+
 protected: 
     static constexpr int DEFAULT_ROWS = 8;
     static constexpr int DEFAULT_COLS = 10;
@@ -12,23 +24,21 @@ protected:
     static constexpr int MATCHES_TO_POP = 2;
 
     struct Bubble {
-        enum class Color { NONE, RED, YELLOW, BLUE };
-
-        Color color;
+        BubbleColor color;
         int neighbors;
 
-        Bubble(Color color = Color::NONE, int neighbors = 0) : color(color), neighbors(neighbors) {}
+        Bubble(BubbleColor color = BubbleColor::NONE, int neighbors = 0) : color(color), neighbors(neighbors) {}
 
         bool operator==(const Bubble& other) const {
             return color == other.color;
         }
 
-        void operator=(const Color color) {
+        void operator=(const BubbleColor color) {
             this->color = color;
         }
 
         bool empty() const {
-            return color == Color::NONE;
+            return color == BubbleColor::NONE;
         }
     };
 
@@ -44,16 +54,6 @@ protected:
     inline void applyNbr(const int srcRow, const int srcCol, const int dstRow, const int dstCol);
 
     bool compare(const int row, const int col, const int rowOffset, const int colOffset) const;
-
-public:
-    GameBoard(const int rows = DEFAULT_ROWS, const int cols = DEFAULT_COLS);
-    ~GameBoard();
-
-    Bubble::Color get(const int row, const int col) const;
-    void set(const int row, const int col, const Bubble::Color color);
-
-    bool shouldPop(const int row, const int col) const;
-    bool shouldDrop(const int row, const int col) const;
 };
 
 #endif

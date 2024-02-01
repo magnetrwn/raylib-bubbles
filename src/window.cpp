@@ -7,7 +7,7 @@ GameWindow::GameWindow(const int width, const int height, const char* title, con
 
     InitWindow(width, height, title);
     SetTargetFPS(fps);
-    font = LoadFontEx(DEFAULT_FONT_PATH, DEFAULT_FONT_SIZE, NULL, 0);
+    font = LoadFontEx(DEFAULT_FONT_PATH, DEFAULT_FONT_SIZE, nullptr, 0);
 }
 
 /* --- public --- */

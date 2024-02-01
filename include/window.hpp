@@ -1,10 +1,18 @@
 #ifndef WINDOW_HPP_
 #define WINDOW_HPP_
 
-#include <string>
 #include <raylib.h>
 
 class GameWindow {
+public:
+    GameWindow(int width = DEFAULT_WIDTH, 
+        int height = DEFAULT_HEIGHT, 
+        const char* title = DEFAULT_TITLE, 
+        int fps = DEFAULT_FPS);
+    ~GameWindow();
+
+    void run();
+
 protected:
     static constexpr int DEFAULT_WIDTH = 480;
     static constexpr int DEFAULT_HEIGHT = 720;
@@ -19,15 +27,6 @@ protected:
     int fps;
 
     Font font;
-    
-public:
-    GameWindow(int width = DEFAULT_WIDTH, 
-        int height = DEFAULT_HEIGHT, 
-        const char* title = DEFAULT_TITLE, 
-        int fps = DEFAULT_FPS);
-    ~GameWindow();
-
-    void run();
 };
 
 #endif
