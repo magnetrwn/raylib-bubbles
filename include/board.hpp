@@ -38,8 +38,8 @@ public:
     bool shouldDrop(const int row, const int col) const;
 
 protected: 
-    static constexpr int DEFAULT_ROWS = 8;
-    static constexpr int DEFAULT_COLS = 10;
+    static constexpr int DEFAULT_ROWS = 10;
+    static constexpr int DEFAULT_COLS = 8;
 
     static constexpr int MATCHES_TO_POP = 2;
 
@@ -52,6 +52,7 @@ protected:
     inline int hexGridSize(const int nRows = DEFAULT_ROWS) const;
     inline bool oob(const int row, const int col) const;
     inline int at(const int row, const int col) const;
+
     inline void applyNbr(const int srcRow, const int srcCol, const int dstRow, const int dstCol);
 
     bool compare(const int row, const int col, const int rowOffset, const int colOffset) const;

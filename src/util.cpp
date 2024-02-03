@@ -14,7 +14,7 @@ bool GameUtils::clamp(float& value, const float lowLimit, const float highLimit)
 
 Color GameUtils::asRaylibColor(const int hue) {
     switch (hue) {
-        case 0: return BLANK;
+        case 0: return RED; // TODO: remove this later, this just draws red instead of empty
         case 1: return RED;
         case 2: return GREEN;
         case 3: return BLUE;

@@ -36,6 +36,8 @@ void GameWindow::run() {
         BeginDrawing();
             ClearBackground(BLACK);
 
+            drawBoard();
+
             drawText("col: " + std::to_string(xToCol(test.x)) + ", row: " + std::to_string(yToRow(test.y)),
                      20.0f, static_cast<float>(height) - 64.0f);
             drawBubble(test.x, test.y, radius);
@@ -54,15 +56,14 @@ void GameWindow::drawBubble(const float x, const float y, const float radius, co
 
 void GameWindow::drawBoard() {
     for (int row = 0; row < board.getRows(); row++) {
-        for (int col = 0; col < board.getCols(); col++) {
+        for (int col = 0; col < board.getCols() - row % 2; col++) {
             const float x = col * (static_cast<float>(width) / board.getCols());
             const float y = row * (static_cast<float>(height) / board.getRows());
             const float radius = 32.0f;
             const int hue = board.get(row, col);
 
-            if (hue != 0) {
+            //if (hue != 0)
                 drawBubble(x, y, radius, GameUtils::asRaylibColor(hue));
-            }
         }
     }
 }
