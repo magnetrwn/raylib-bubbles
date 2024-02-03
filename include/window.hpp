@@ -11,7 +11,7 @@
 
 class GameWindow {
 public:
-    GameWindow(int width = DEFAULT_WIDTH, int height = DEFAULT_HEIGHT, const char* title = DEFAULT_TITLE, int fps = DEFAULT_FPS);
+    GameWindow(int width = DEFAULT_WIDTH, int height = DEFAULT_HEIGHT, const int rows = DEFAULT_ROWS, const int cols = DEFAULT_COLS, const char* title = DEFAULT_TITLE, int fps = DEFAULT_FPS);
     ~GameWindow();
 
     void run();
@@ -21,8 +21,6 @@ public:
     void drawBoard(const float radius);
 
 protected:
-    static constexpr float SQRT_3 = 1.73205080757f;
-
     static constexpr int DEFAULT_WIDTH = 480;
     static constexpr int DEFAULT_HEIGHT = 720;
     static constexpr const char* DEFAULT_TITLE = "Game Window";
@@ -31,6 +29,9 @@ protected:
     static constexpr const char* DEFAULT_FONT_PATH = "res/ct_prolamina.ttf";
     static constexpr int DEFAULT_FONT_SIZE = 48;
     static constexpr const char* DEFAULT_BUBBLE_TEX_PATH = "res/bubble.png";
+
+    static constexpr int DEFAULT_ROWS = 10;
+    static constexpr int DEFAULT_COLS = 12;
 
     int width;
     int height;

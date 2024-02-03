@@ -2,8 +2,8 @@
 
 /* --- initialization --- */
 
-GameWindow::GameWindow(const int width, const int height, const char* title, const int fps) 
-    : width(width), height(height), fps(fps), board(14, 8) {
+GameWindow::GameWindow(const int width, const int height, const int rows, const int cols, const char* title, const int fps) 
+    : width(width), height(height), fps(fps), board(rows, cols) {
 
     InitWindow(width, height, title);
     SetTargetFPS(fps);
@@ -20,7 +20,7 @@ GameWindow::~GameWindow() {
 
 void GameWindow::run() {
     Vector2 test = { static_cast<float>(width) / 2, static_cast<float>(height) / 2 };
-    float radius = 26.0f;
+    float radius = static_cast<float>(width) / board.getCols() / 2;
     float xvel = -0.2f;
     float yvel = -0.2f;
 
@@ -55,7 +55,7 @@ void GameWindow::drawBubble(const float x, const float y, const float radius, co
 
 void GameWindow::drawBoard(const float radius) {
     for (int row = 0; row < board.getRows(); row++) {
-        for (int col = 0; col < board.getCols() - row % 2; col++)
+        for (int col = 0; col < board.hexAlign(row); col++)
             //if (hue != 0)
                 drawBubble(
                     rowColToX(row, col, radius), 
@@ -76,9 +76,9 @@ int GameWindow::yToRow(const float y, const float radius) const {
 }
 
 float GameWindow::rowColToX(const int row, const int col, const float radius) const {
-    return col * 2 * radius + (row % 2 == 0 ? 0 : radius);
+    return static_cast<float>(col * 2) * radius + (row % 2 == 0 ? 0.0f : radius);
 }
 
 float GameWindow::rowToY(const int row, const float radius) const {
-    return row * 2 * radius;
+    return static_cast<float>(row * 2) * radius;
 }

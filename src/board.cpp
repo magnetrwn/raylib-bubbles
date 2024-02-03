@@ -24,6 +24,10 @@ int GameBoard::getCols() const {
     return cols;
 }
 
+int GameBoard::hexAlign(const int row) const {
+    return row % 2 == 0 ? cols : cols - (cols % 2 == 0 ? 1 : 0);
+}
+
 int GameBoard::get(const int row, const int col) const {
     return board[at(row, col)].hue;
 }
@@ -63,10 +67,6 @@ bool GameBoard::shouldPop(const int row, const int col) const {
 }*/
 
 /* --- protected --- */
-
-int GameBoard::hexAlign(const int row) const {
-    return row % 2 == 0 ? cols : cols - (cols % 2 == 0 ? 1 : 0);
-}
 
 int GameBoard::hexGridSize(const int nRows) const {
     return (nRows * hexAlign(0) + nRows * hexAlign(1) + 1) / 2;

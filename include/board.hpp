@@ -34,6 +34,8 @@ public:
     int get(const int row, const int col) const;
     void set(const int row, const int col, const int hue);
 
+    int hexAlign(const int row) const;
+
     bool shouldPop(const int row, const int col) const;
     bool shouldDrop(const int row, const int col) const;
 
@@ -45,7 +47,6 @@ protected:
 
     Bubble* board;
 
-    inline int hexAlign(const int row) const;
     inline int hexGridSize(const int nRows) const;
     inline bool oob(const int row, const int col) const;
     inline int at(const int row, const int col) const;
