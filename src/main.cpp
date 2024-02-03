@@ -3,7 +3,6 @@
 
 int main(void) {
     GameWindow gw;
-    GameBoard gb;
     gw.run();
     return 0;
 }

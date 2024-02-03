@@ -16,15 +16,23 @@ GameBoard::~GameBoard() {
 
 /* --- public --- */
 
-GameBoard::BubbleColor GameBoard::get(const int row, const int col) const {
-    return board[at(row, col)].color;
+int GameBoard::getRows() const {
+    return rows;
 }
 
-void GameBoard::set(const int row, const int col, const BubbleColor color) {
-    if (board[at(row, col)] == color)
+int GameBoard::getCols() const {
+    return cols;
+}
+
+int GameBoard::get(const int row, const int col) const {
+    return board[at(row, col)].hue;
+}
+
+void GameBoard::set(const int row, const int col, const int hue) {
+    if (board[at(row, col)] == hue)
         return;
 
-    board[at(row, col)] = color;
+    board[at(row, col)] = hue;
 
     applyNbr(row, col, row, col - 1);
     applyNbr(row, col, row, col + 1);
@@ -77,7 +85,7 @@ int GameBoard::at(const int row, const int col) const {
 }
 
 void GameBoard::applyNbr(const int srcRow, const int srcCol, const int dstRow, const int dstCol) {
-    // TODO: Do not run multiple times on the same color
+    // TODO: Do not run multiple times on the same hue
     board[at(dstRow, dstCol)].neighbors += board[at(srcRow, srcCol)].empty() ? -1 : 1;
 }
 
