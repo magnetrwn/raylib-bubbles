@@ -5,8 +5,8 @@
 GameBoard::GameBoard(const int rows, const int cols)
     : rows(rows), cols(cols) {
     
-    board = new Bubble[hexGridSize()];
-    for (int i = 0; i < hexGridSize(); i++)
+    board = new Bubble[hexGridSize(rows)];
+    for (int i = 0; i < hexGridSize(rows); i++)
         board[i] = Bubble();
 }
 
@@ -79,7 +79,7 @@ bool GameBoard::oob(const int row, const int col) const {
 
 int GameBoard::at(const int row, const int col) const {
     if (oob(row, col))
-        throw std::out_of_range("Out of bounds.");
+        throw std::out_of_range("Requested GameBoard::at() position is out of bounds.");
 
     return hexGridSize(row) + col;
 }

@@ -18,13 +18,11 @@ public:
 
     void drawText(const std::string text, const float x, const float y, const float scale = 1.0f, const Color color = WHITE);
     void drawBubble(const float x, const float y, const float radius, const Color color = WHITE);
-
-    void drawBoard(); // TODO: figure out why this cannot be const
-
-    int xToCol(const float x) const;
-    int yToRow(const float y) const;
+    void drawBoard(const float radius);
 
 protected:
+    static constexpr float SQRT_3 = 1.73205080757f;
+
     static constexpr int DEFAULT_WIDTH = 480;
     static constexpr int DEFAULT_HEIGHT = 720;
     static constexpr const char* DEFAULT_TITLE = "Game Window";
@@ -44,8 +42,10 @@ protected:
     GameBoard board;
     GameActionMgr actions;
 
-    // TODO: we need a way to figure out what the size of each bubble is, based on how 
-    //       many are on each row/col, to fit the screen.
+    inline int xyToCol(const float x, const float y, const float radius) const;
+    inline int yToRow(const float y, const float radius) const;
+    inline float rowColToX(const int row, const int col, const float radius) const;
+    inline float rowToY(const int row, const float radius) const;
 };
 
 #endif

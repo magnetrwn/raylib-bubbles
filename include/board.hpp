@@ -25,7 +25,7 @@ public:
         }
     };
     
-    GameBoard(const int rows = DEFAULT_ROWS, const int cols = DEFAULT_COLS);
+    GameBoard(const int rows, const int cols);
     ~GameBoard();
 
     int getRows() const;
@@ -38,9 +38,6 @@ public:
     bool shouldDrop(const int row, const int col) const;
 
 protected: 
-    static constexpr int DEFAULT_ROWS = 10;
-    static constexpr int DEFAULT_COLS = 8;
-
     static constexpr int MATCHES_TO_POP = 2;
 
     int rows; // TODO: using int everywhere for now, but should be size_t for best practice
@@ -49,7 +46,7 @@ protected:
     Bubble* board;
 
     inline int hexAlign(const int row) const;
-    inline int hexGridSize(const int nRows = DEFAULT_ROWS) const;
+    inline int hexGridSize(const int nRows) const;
     inline bool oob(const int row, const int col) const;
     inline int at(const int row, const int col) const;
 

@@ -3,7 +3,7 @@
 /* --- initialization --- */
 
 GameWindow::GameWindow(const int width, const int height, const char* title, const int fps) 
-    : width(width), height(height), fps(fps) {
+    : width(width), height(height), fps(fps), board(14, 8) {
 
     InitWindow(width, height, title);
     SetTargetFPS(fps);
@@ -20,9 +20,9 @@ GameWindow::~GameWindow() {
 
 void GameWindow::run() {
     Vector2 test = { static_cast<float>(width) / 2, static_cast<float>(height) / 2 };
-    float radius = 32.0f;
-    float xvel = 2.6f;
-    float yvel = -1.1f;
+    float radius = 26.0f;
+    float xvel = -0.2f;
+    float yvel = -0.2f;
 
     while (!WindowShouldClose()) {
         test.x += xvel;
@@ -36,9 +36,8 @@ void GameWindow::run() {
         BeginDrawing();
             ClearBackground(BLACK);
 
-            drawBoard();
-
-            drawText("col: " + std::to_string(xToCol(test.x)) + ", row: " + std::to_string(yToRow(test.y)),
+            drawBoard(radius);
+            drawText("col: " + std::to_string(xyToCol(test.x, test.y, radius)) + ", row: " + std::to_string(yToRow(test.y, radius)),
                      20.0f, static_cast<float>(height) - 64.0f);
             drawBubble(test.x, test.y, radius);
 
@@ -54,24 +53,32 @@ void GameWindow::drawBubble(const float x, const float y, const float radius, co
     DrawTextureEx(bubble, { x, y }, 0.0f, 2 * radius / bubble.width, color);
 }
 
-void GameWindow::drawBoard() {
+void GameWindow::drawBoard(const float radius) {
     for (int row = 0; row < board.getRows(); row++) {
-        for (int col = 0; col < board.getCols() - row % 2; col++) {
-            const float x = col * (static_cast<float>(width) / board.getCols());
-            const float y = row * (static_cast<float>(height) / board.getRows());
-            const float radius = 32.0f;
-            const int hue = board.get(row, col);
-
+        for (int col = 0; col < board.getCols() - row % 2; col++)
             //if (hue != 0)
-                drawBubble(x, y, radius, GameUtils::asRaylibColor(hue));
-        }
+                drawBubble(
+                    rowColToX(row, col, radius), 
+                    rowToY(row, radius), radius, 
+                    GameUtils::asRaylibColor(board.get(row, col))
+                );
     }
 }
 
-int GameWindow::xToCol(const float x) const {
-    return static_cast<int>(x / (static_cast<float>(width) / board.getCols()));
+/* --- protected --- */
+
+int GameWindow::xyToCol(const float x, const float y, const float radius) const {
+    return static_cast<int>((x - (yToRow(y, radius) % 2 == 0 ? 0 : radius)) / (2 * radius));
 }
 
-int GameWindow::yToRow(const float y) const {
-    return static_cast<int>(y / (static_cast<float>(height) / board.getRows()));
+int GameWindow::yToRow(const float y, const float radius) const {
+    return static_cast<int>(y / (2 * radius));
+}
+
+float GameWindow::rowColToX(const int row, const int col, const float radius) const {
+    return col * 2 * radius + (row % 2 == 0 ? 0 : radius);
+}
+
+float GameWindow::rowToY(const int row, const float radius) const {
+    return row * 2 * radius;
 }
