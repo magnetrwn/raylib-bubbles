@@ -15,7 +15,7 @@ GameWindow::GameWindow(const int width, const int height, const int rows, const 
     for (int i = 0; i < DEFAULT_BUBBLE_TEX_COUNT; i++)
         bubbleTexs[i] = LoadTexture(DEFAULT_BUBBLE_TEX_PATHS[i]); // TODO: remember to move int back to size_t the whole project.
 
-    radius = static_cast<float>(width) / board.getCols() / 2;
+    radius = static_cast<float>(width) / (static_cast<float>(cols) + (cols % 2 == 1 ? 0.5f : 0)) / 2.0f; // NOTE: fit-to-width
 }
 
 GameWindow::~GameWindow() {
