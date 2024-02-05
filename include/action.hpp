@@ -11,10 +11,15 @@ public:
     struct ActionType {
         static constexpr int EFFECT_DATA_SIZE = 7;
 
-        /* Data held by the array will depend on the effect:
+        /* The Effect enum determines the effect type, and represents:
          *
-         * LAUNCH: {      x,      y,  angle, radius,   xVel,   yVel }
-         * LINEAR: {  fromX,  fromY,    toX,    toY, radius,   xVel,   yVel }
+         * LAUNCH: a bubble is launched from the cannon, moves upwards at an angle, bounces off walls,
+         *         and attaches to the board according to where it hits.
+         * DROP: animation for bubbles left floating on the board, dropping with parabolic motion.
+         *
+         * Data held by the array will depend on the effect:
+         *
+         * LAUNCH: {      x,      y, radius,   xVel,   yVel }
          * DROP:   {      x,      y, radius }
          *
          * So we make an array of 7 floats and only use based on effect.
@@ -23,7 +28,6 @@ public:
 
         enum class Effect {
             LAUNCH,
-            LINEAR,
             DROP
         };
 
@@ -33,6 +37,9 @@ public:
 
         ActionType(const Effect effect, const std::array<float, EFFECT_DATA_SIZE>& data, const int hue)
             : effect(effect), data(data), hue(hue) {}
+
+        ActionType(const Effect effect, std::array<float, EFFECT_DATA_SIZE>&& data, const int hue)
+            : effect(effect), data(std::move(data)), hue(hue) {}
     };
 
     bool isOngoing() const;

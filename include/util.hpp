@@ -7,7 +7,6 @@
 class GameUtils {
 public:
     static bool clamp(float& value, const float lowLimit, const float highLimit);
-    static Color asRaylibColor(const int hue);
 };
 
 #endif
