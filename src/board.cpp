@@ -79,13 +79,16 @@ bool GameBoard::oob(const int row, const int col) const {
 
 int GameBoard::at(const int row, const int col) const {
     if (oob(row, col))
-        throw std::out_of_range("Requested GameBoard::at() position is out of bounds.");
+        throw std::out_of_range("Requested GameBoard::at(" + std::to_string(row) + ", " + std::to_string(col) + ") position is out of bounds.");
 
     return hexGridSize(row) + col;
 }
 
 void GameBoard::applyNbr(const int srcRow, const int srcCol, const int dstRow, const int dstCol) {
     // TODO: Do not run multiple times on the same hue
+    if (oob(dstRow, dstCol) or oob(srcRow, srcCol))
+        return;
+
     board[at(dstRow, dstCol)].neighbors += board[at(srcRow, srcCol)].empty() ? -1 : 1;
 }
 

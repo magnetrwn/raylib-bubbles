@@ -17,7 +17,7 @@ public:
     void run();
 
     void drawText(const std::string text, const float x, const float y, const float scale = 1.0f, const Color color = WHITE);
-    void drawBubble(const float x, const float y, const int hue = 0);
+    void drawBubble(const float x, const float y, const int hue);
     void drawBoard();
     void drawLimitLine();
 
@@ -27,17 +27,17 @@ protected:
     static constexpr const char* DEFAULT_TITLE = "Game Window";
     static constexpr int DEFAULT_FPS = 60;
 
-    static constexpr const char* DEFAULT_FONT_PATH = "res/fonts/ct_prolamina.ttf";
-    static constexpr int DEFAULT_FONT_SIZE = 48;
+    static constexpr const char* FONT_PATH = "res/fonts/ct_prolamina.ttf";
+    static constexpr int FONT_SIZE = 48;
 
-    static constexpr int DEFAULT_BUBBLE_TEX_COUNT = 6;
-    static constexpr const char* DEFAULT_BUBBLE_TEX_PATHS[DEFAULT_BUBBLE_TEX_COUNT] = {
-        "res/sprites/bubble_0.png",
+    static constexpr int BUBBLE_TEX_COUNT = 6;
+    static constexpr const char* BUBBLE_TEX_PATHS[BUBBLE_TEX_COUNT] = {
         "res/sprites/bubble_1.png",
         "res/sprites/bubble_2.png",
         "res/sprites/bubble_3.png",
         "res/sprites/bubble_4.png",
-        "res/sprites/bubble_5.png"
+        "res/sprites/bubble_5.png",
+        "res/sprites/bubble_6.png"
     };
 
     static constexpr int DEFAULT_ROWS = 16;
@@ -49,7 +49,7 @@ protected:
     float radius; // TODO: if you ever want multiple boards, you must add a parameter for this
 
     Font font;
-    Texture2D bubbleTexs[DEFAULT_BUBBLE_TEX_COUNT];
+    Texture2D bubbleTexs[BUBBLE_TEX_COUNT];
 
     GameBoard board;
     GameActionMgr actions;
@@ -59,7 +59,8 @@ protected:
     inline float rowColToX(const int row, const int col) const;
     inline float rowToY(const int row) const;
 
-    inline void drawDebugOver();
+    inline void drawDebugOverlay();
+    inline void drawDebugBouncy(const int hue = 1);
 };
 
 #endif

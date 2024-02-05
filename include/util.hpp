@@ -2,7 +2,6 @@
 #define UTIL_HPP_
 
 #include "board.hpp"
-#include <raylib.h>
 
 class GameUtils {
 public:

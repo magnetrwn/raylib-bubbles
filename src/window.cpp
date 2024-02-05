@@ -1,7 +1,7 @@
 #include "window.hpp"
 #include <raylib.h>
 
-constexpr const char* GameWindow::DEFAULT_BUBBLE_TEX_PATHS[DEFAULT_BUBBLE_TEX_COUNT];
+constexpr const char* GameWindow::BUBBLE_TEX_PATHS[BUBBLE_TEX_COUNT];
 
 /* --- initialization --- */
 
@@ -11,39 +11,30 @@ GameWindow::GameWindow(const int width, const int height, const int rows, const 
     InitWindow(width, height, title);
     SetTargetFPS(fps);
 
-    font = LoadFontEx(DEFAULT_FONT_PATH, DEFAULT_FONT_SIZE, nullptr, 0);
-    for (int i = 0; i < DEFAULT_BUBBLE_TEX_COUNT; i++)
-        bubbleTexs[i] = LoadTexture(DEFAULT_BUBBLE_TEX_PATHS[i]); // TODO: remember to move int back to size_t the whole project.
+    font = LoadFontEx(FONT_PATH, FONT_SIZE, nullptr, 0);
+    for (int i = 0; i < BUBBLE_TEX_COUNT; i++)
+        bubbleTexs[i] = LoadTexture(BUBBLE_TEX_PATHS[i]); // TODO: remember to move int back to size_t the whole project.
 
     radius = static_cast<float>(width) / (static_cast<float>(cols) + (cols % 2 == 1 ? 0.5f : 0)) / 2.0f; // NOTE: fit-to-width
 }
 
 GameWindow::~GameWindow() {
     UnloadFont(font);
+    for (int i = 0; i < BUBBLE_TEX_COUNT; i++)
+        UnloadTexture(bubbleTexs[i]);
     CloseWindow();
 }
 
 /* --- public --- */
 
 void GameWindow::run() {
-    //Vector2 test = { static_cast<float>(width) / 2, static_cast<float>(height) / 2 };
-    //float xvel = -0.2f;
-    //float yvel = -0.2f;
-
     while (!WindowShouldClose()) {
-        //test.x += xvel;
-        //test.y += yvel;
-
-        //if (GameUtils::clamp(test.x, 0, width - 2 * radius))
-        //    xvel *= -1;
-        //if (GameUtils::clamp(test.y, 0, height - 2 * radius))
-        //    yvel *= -1;
-
         BeginDrawing();
             ClearBackground(BLACK);
             
             drawBoard();
-            drawDebugOver();
+            drawDebugBouncy();
+            drawDebugOverlay();
 
         EndDrawing();
     }
@@ -54,21 +45,26 @@ void GameWindow::drawText(const std::string text, const float x, const float y, 
 }
 
 void GameWindow::drawBubble(const float x, const float y, const int hue) {
-    if (hue < 0 or hue >= DEFAULT_BUBBLE_TEX_COUNT)
-        throw std::invalid_argument("Requested GameWindow::drawBubble() hue (texture index) is not between 0 and " + std::to_string(DEFAULT_BUBBLE_TEX_COUNT) + ".");
+    if (hue == 0)
+        return;
 
-    DrawTextureEx(bubbleTexs[hue], { x, y }, 0.0f, 2 * radius / bubbleTexs[0].width, WHITE);
+    if (hue < 0 or hue > BUBBLE_TEX_COUNT)
+        throw std::invalid_argument("Requested GameWindow::drawBubble() hue (texture index) is not between 0 and " + std::to_string(BUBBLE_TEX_COUNT) + ".");
+
+    DrawTextureEx(bubbleTexs[hue - 1], { x, y }, 0.0f, 2 * radius / bubbleTexs[0].width, WHITE);
 }
 
 void GameWindow::drawBoard() {
-        for (int row = 0; row < board.getRows(); row++)
-            for (int col = 0; col < board.hexAlign(row); col++)
-                //if (hue != 0)
-                    drawBubble(
-                        rowColToX(row, col), 
-                        rowToY(row), 
-                        col % 6 //board.get(row, col)
-                    );
+    DrawLine(0, rowToY(board.getRows() - 1), width, rowToY(board.getRows() - 1), RED);
+
+    for (int row = 0; row < board.getRows(); row++)
+        for (int col = 0; col < board.hexAlign(row); col++)
+            //if (hue != 0)
+                drawBubble(
+                    rowColToX(row, col), 
+                    rowToY(row), 
+                    board.get(row, col)
+                );
 }
 
 /* --- protected --- */
@@ -89,9 +85,30 @@ float GameWindow::rowToY(const int row) const {
     return static_cast<float>(row * 2) * radius;
 }
 
-void GameWindow::drawDebugOver() {
+void GameWindow::drawDebugOverlay() {
     Vector2 mousePos = GetMousePosition();
     drawText("col: " + std::to_string(xyToCol(mousePos.x, mousePos.y)) + ", row: " + std::to_string(yToRow(mousePos.y)),
         20.0f, static_cast<float>(height) - 64.0f);
-    drawBubble(mousePos.x, mousePos.y);
+    drawBubble(mousePos.x, mousePos.y, 1);
+}
+
+void GameWindow::drawDebugBouncy(const int hue) {
+    static Vector2 bouncy = { static_cast<float>(width) / 2, static_cast<float>(height) / 2 };
+    static float xvel = -3.3f;
+    static float yvel = -1.3f;
+
+    bouncy.x += xvel;
+    bouncy.y += yvel;
+
+    if (GameUtils::clamp(bouncy.x, 0, width - 2 * radius))
+        xvel *= -1;
+    if (GameUtils::clamp(bouncy.y, 0, height - 2 * radius))
+        yvel *= -1;
+
+    drawBubble(bouncy.x, bouncy.y, hue);
+
+    try {
+        if (board.get(yToRow(bouncy.y), xyToCol(bouncy.x, bouncy.y)) == 0)
+            board.set(yToRow(bouncy.y), xyToCol(bouncy.x, bouncy.y), GetRandomValue(1, BUBBLE_TEX_COUNT));
+    } catch (const std::out_of_range& e) {}
 }

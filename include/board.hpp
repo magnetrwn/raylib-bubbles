@@ -10,6 +10,7 @@ public:
         int hue;
         int neighbors;
 
+        // NOTE: Zero hue is empty space on the board, which is why the empty() method checks == 0.
         Bubble(int hue = 0, int neighbors = 0) : hue(hue), neighbors(neighbors) {}
 
         bool operator==(const Bubble& other) const {
