@@ -1,15 +1,18 @@
 # Bubble Shooter Controls
 
-**Edit later**
+**TODO: Edit later**
 
 ## Movement Controls
+
 - Use the **Z** key to move the bubble shooter pointer to the left.
 - Use the **X** key to move the bubble shooter pointer to the right.
 
 ## Shooting Control
+
 - Press the **Left Shift** key to shoot the bubble.
 
 ## Gameplay Instructions
+
 1. Aim the bubble shooter pointer towards the desired target bubble.
 2. Adjust the angle and trajectory of the bubble by moving the pointer.
 3. Press the **Left Shift** key to shoot the bubble towards the target.

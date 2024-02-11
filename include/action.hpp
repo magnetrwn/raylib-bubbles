@@ -9,7 +9,7 @@
 class GameActionMgr {
 public:
     struct ActionType {
-        static constexpr int EFFECT_DATA_SIZE = 7;
+        static constexpr size_t EFFECT_DATA_SIZE = 7;
 
         /* The Effect enum determines the effect type, and represents:
          *
@@ -33,12 +33,12 @@ public:
 
         Effect effect;
         std::array<float, EFFECT_DATA_SIZE> data;
-        int hue;
+        size_t hue;
 
-        ActionType(const Effect effect, const std::array<float, EFFECT_DATA_SIZE>& data, const int hue)
+        ActionType(const Effect effect, const std::array<float, EFFECT_DATA_SIZE>& data, const size_t hue)
             : effect(effect), data(data), hue(hue) {}
 
-        ActionType(const Effect effect, std::array<float, EFFECT_DATA_SIZE>&& data, const int hue)
+        ActionType(const Effect effect, std::array<float, EFFECT_DATA_SIZE>&& data, const size_t hue)
             : effect(effect), data(std::move(data)), hue(hue) {}
     };
 

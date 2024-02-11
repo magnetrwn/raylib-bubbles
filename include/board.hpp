@@ -7,17 +7,17 @@
 class GameBoard {
 public:
     struct Bubble {
-        int hue;
-        int neighbors;
+        size_t hue;
+        size_t neighbors;
 
         // NOTE: Zero hue is empty space on the board, which is why the empty() method checks == 0.
-        Bubble(int hue = 0, int neighbors = 0) : hue(hue), neighbors(neighbors) {}
+        Bubble(size_t hue = 0, size_t neighbors = 0) : hue(hue), neighbors(neighbors) {}
 
         bool operator==(const Bubble& other) const {
             return hue == other.hue;
         }
 
-        void operator=(const int hue) {
+        void operator=(const size_t hue) {
             this->hue = hue;
         }
 
@@ -26,35 +26,35 @@ public:
         }
     };
     
-    GameBoard(const int rows, const int cols);
+    GameBoard(const size_t rows, const size_t cols);
     ~GameBoard();
 
-    int getRows() const;
-    int getCols() const;
+    size_t getRows() const;
+    size_t getCols() const;
 
-    int get(const int row, const int col) const;
-    void set(const int row, const int col, const int hue);
+    size_t get(const size_t row, const size_t col) const;
+    void set(const size_t row, const size_t col, const size_t hue);
 
-    int hexAlign(const int row) const;
+    size_t hexAlign(const size_t row) const;
 
-    bool shouldPop(const int row, const int col) const;
-    bool shouldDrop(const int row, const int col) const;
+    bool shouldPop(const size_t row, const size_t col) const;
+
 
 protected: 
-    static constexpr int MATCHES_TO_POP = 2;
+    static constexpr size_t MATCHES_TO_POP = 2;
 
-    int rows; // TODO: using int everywhere for now, but should be size_t for best practice
-    int cols;
+    size_t rows;
+    size_t cols;
 
     Bubble* board;
 
-    inline int hexGridSize(const int nRows) const;
-    inline bool oob(const int row, const int col) const;
-    inline int at(const int row, const int col) const;
+    inline size_t hexGridSize(const size_t nRows) const;
+    inline bool oob(const size_t row, const size_t col) const;
+    inline size_t at(const size_t row, const size_t col) const;
 
-    inline void applyNbr(const int srcRow, const int srcCol, const int dstRow, const int dstCol);
+    inline void applyNbr(const size_t srcRow, const size_t srcCol, const size_t dstRow, const size_t dstCol);
 
-    bool compare(const int row, const int col, const int rowOffset, const int colOffset) const;
+    bool compare(const size_t row, const size_t col, const int rowOffset, const int colOffset) const;
 };
 
 #endif
