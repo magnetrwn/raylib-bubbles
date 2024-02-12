@@ -69,4 +69,8 @@ If this sounds confusing, looking at [the source code](include/board.hpp) could 
 
 Available as a public member of `GameBoard`, the `Bubble` class is a simple container for bubble color (including empty space) and tracking the number of neighbors with non-empty bubble color. It provides operators to generate self-documenting code, but should not be used outside of the `GameBoard` abstraction.
 
+### Action
+
+An action is something that takes place on the window with bubbles, but is not snapped to the board grid. This is essential to allow effects and animations to be displayed.
+
 **TODO**

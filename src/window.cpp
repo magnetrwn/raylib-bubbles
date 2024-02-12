@@ -1,12 +1,12 @@
 #include "window.hpp"
-#include "util.hpp"
+#include <raylib.h>
 
 constexpr const char* GameWindow::BUBBLE_TEX_PATHS[BUBBLE_TEX_COUNT];
 
 /* --- initialization --- */
 
-GameWindow::GameWindow(const size_t width, const size_t height, const size_t rows, const size_t cols, const char* title, const size_t fps) 
-    : width(width), height(height), fps(fps), board(rows, cols) {
+GameWindow::GameWindow(const float width, const float height, const size_t rows, const size_t cols, const char* title, const size_t fps) 
+    : width(width), height(height), fps(fps), board(rows, cols), actions(width, height) {
 
     InitWindow(width, height, title);
     SetTargetFPS(fps);
@@ -15,7 +15,7 @@ GameWindow::GameWindow(const size_t width, const size_t height, const size_t row
     for (size_t i = 0; i < BUBBLE_TEX_COUNT; i++)
         bubbleTexs[i] = LoadTexture(BUBBLE_TEX_PATHS[i]);
 
-    radius = static_cast<float>(width) / (static_cast<float>(cols) + (cols % 2 == 1 ? 0.5f : 0)) / 2.0f; // NOTE: fit-to-width
+    radius = width / (static_cast<float>(cols) + (cols % 2 == 1 ? 0.5f : 0)) / 2.0f; // NOTE: fit-to-width
 }
 
 GameWindow::~GameWindow() {
@@ -87,12 +87,12 @@ float GameWindow::rowToY(const size_t row) const {
 void GameWindow::drawDebugOverlay() {
     Vector2 mousePos = GetMousePosition();
     drawText("col: " + std::to_string(xyToCol(mousePos.x, mousePos.y)) + ", row: " + std::to_string(yToRow(mousePos.y)),
-        20.0f, static_cast<float>(height) - 64.0f);
+        20.0f, height - 64.0f);
     drawBubble(mousePos.x, mousePos.y, 1);
 }
 
 void GameWindow::drawDebugBouncy(const size_t hue) {
-    static Vector2 bouncy = { static_cast<float>(width) / 2, static_cast<float>(height) / 2 };
+    static Vector2 bouncy = { width / 2, height / 2 };
     static float xvel = -5.0f;
     static float yvel = -4.0f;
 
@@ -111,7 +111,7 @@ void GameWindow::drawDebugBouncy(const size_t hue) {
         const size_t col = xyToCol(bouncy.x, bouncy.y);
 
         if (!GameUtils::usedLast(row, col) and board.get(row, col) == 0)
-            board.setThenPop(row, col, 1);
-        
+            board.setThenPop(row, col, GetRandomValue(1, 4));
+
     } catch (const std::out_of_range& e) {}
 }

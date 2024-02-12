@@ -47,21 +47,21 @@ bool GameBoard::pop(const size_t row, const size_t col, const size_t matches) {
 
         found.push_back(el);
 
-        dfs.push_back({el.first, el.second - 1});
-        dfs.push_back({el.first, el.second + 1});
-        dfs.push_back({el.first - 1, el.second});
-        dfs.push_back({el.first + 1, el.second});
-        dfs.push_back({el.first - 1, el.second + (el.first % 2 == 0 ? -1 : 1)});
-        dfs.push_back({el.first + 1, el.second + (el.first % 2 == 0 ? -1 : 1)});
+        dfs.push_back({ el.first, el.second - 1 });
+        dfs.push_back({ el.first, el.second + 1 });
+        dfs.push_back({ el.first - 1, el.second });
+        dfs.push_back({ el.first + 1, el.second });
+        dfs.push_back({ el.first - 1, el.second + (el.first % 2 == 0 ? -1 : 1) });
+        dfs.push_back({ el.first + 1, el.second + (el.first % 2 == 0 ? -1 : 1) });
 
-        this->set(el.first, el.second, 0);
+        set(el.first, el.second, 0);
     }
 
     if (found.size() >= matches)
         return true;
     
     for (const std::pair<size_t, size_t>& el : found)
-        this->set(el.first, el.second, matchHue);
+        set(el.first, el.second, matchHue);
 
     // TODO: awkward, maybe better to use a set to track visited instead of switching bubbles to/from 0.
 
@@ -69,8 +69,8 @@ bool GameBoard::pop(const size_t row, const size_t col, const size_t matches) {
 }
 
 bool GameBoard::setThenPop(const size_t row, const size_t col, const size_t hue, const size_t matches) {
-    this->set(row, col, hue);
-    return this->pop(row, col, matches);
+    set(row, col, hue);
+    return pop(row, col, matches);
 }
 
 /* --- protected --- */

@@ -11,7 +11,7 @@
 
 class GameWindow {
 public:
-    GameWindow(size_t width = DEFAULT_WIDTH, size_t height = DEFAULT_HEIGHT, const size_t rows = DEFAULT_ROWS, const size_t cols = DEFAULT_COLS, const char* title = DEFAULT_TITLE, size_t fps = DEFAULT_FPS);
+    GameWindow(const float width = DEFAULT_WIDTH, const float height = DEFAULT_HEIGHT, const size_t rows = DEFAULT_ROWS, const size_t cols = DEFAULT_COLS, const char* title = DEFAULT_TITLE, size_t fps = DEFAULT_FPS);
     ~GameWindow();
 
     void run();
@@ -22,8 +22,8 @@ public:
     void drawLimitLine();
 
 protected:
-    static constexpr size_t DEFAULT_WIDTH = 600;
-    static constexpr size_t DEFAULT_HEIGHT = 960;
+    static constexpr float DEFAULT_WIDTH = 600.0f;
+    static constexpr float DEFAULT_HEIGHT = 960.0f;
     static constexpr const char* DEFAULT_TITLE = "Game Window";
     static constexpr size_t DEFAULT_FPS = 60;
 
@@ -43,8 +43,8 @@ protected:
     static constexpr size_t DEFAULT_ROWS = 14;
     static constexpr size_t DEFAULT_COLS = 10;
 
-    size_t width;
-    size_t height;
+    float width;
+    float height;
     size_t fps;
     float radius; // TODO: if you ever want multiple boards, you must add a parameter for this
 
