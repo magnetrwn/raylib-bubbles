@@ -1,19 +1,5 @@
 #include "board.hpp"
 
-/* --- initialization --- */
-
-GameBoard::GameBoard(const size_t rows, const size_t cols)
-    : rows(rows), cols(cols) {
-    
-    board = new Bubble[hexGridSize(rows)];
-    for (size_t i = 0; i < hexGridSize(rows); i++)
-        board[i] = Bubble();
-}
-
-GameBoard::~GameBoard() {
-    delete[] board;
-}
-
 /* --- public --- */
 
 size_t GameBoard::getRows() const {
@@ -28,6 +14,10 @@ size_t GameBoard::hexAlign(const size_t row) const {
     return row % 2 == 0 ? cols : cols - (cols % 2 == 0 ? 1 : 0);
 }
 
+size_t GameBoard::hexGridSize(const size_t nRows) const {
+    return (nRows * hexAlign(0) + nRows * hexAlign(1) + 1) / 2;
+}
+
 size_t GameBoard::get(const size_t row, const size_t col) const {
     return board[at(row, col)].hue;
 }
@@ -37,39 +27,55 @@ void GameBoard::set(const size_t row, const size_t col, const size_t hue) {
         return;
 
     board[at(row, col)] = hue;
-
-    applyNbr(row, col, row, col - 1);
-    applyNbr(row, col, row, col + 1);
-    applyNbr(row, col, row - 1, col);
-    applyNbr(row, col, row + 1, col);
-    applyNbr(row, col, row - 1, col + (row % 2 == 0 ? -1 : 1));
-    applyNbr(row, col, row + 1, col + (row % 2 == 0 ? -1 : 1));
 }
 
-bool GameBoard::shouldPop(const size_t row, const size_t col) const {
-    if (board[at(row, col)].empty() or board[at(row, col)].neighbors < MATCHES_TO_POP)
+bool GameBoard::pop(const size_t row, const size_t col, const size_t matches) {
+    if (board[at(row, col)].empty())
         return false;
 
-    size_t matching = 0;
+    const size_t matchHue = board[at(row, col)].hue;
 
-    matching += compare(row, col, 0, -1); 
-    matching += compare(row, col, 0, 1);
-    matching += compare(row, col, -1, 0);
-    matching += compare(row, col, 1, 0);
-    matching += compare(row, col, -1, row % 2 == 0 ? -1 : 1);
-    matching += compare(row, col, 1, row % 2 == 0 ? -1 : 1);
+    std::vector<std::pair<size_t, size_t>> dfs, found;
 
-    return matching >= MATCHES_TO_POP;
+    dfs.push_back({row, col});
+    while (!dfs.empty()) {
+        const std::pair<size_t, size_t> el = dfs.back();
+        dfs.pop_back();
+
+        if (oob(el.first, el.second) or board[at(el.first, el.second)].hue != matchHue)
+            continue;
+
+        found.push_back(el);
+
+        dfs.push_back({el.first, el.second - 1});
+        dfs.push_back({el.first, el.second + 1});
+        dfs.push_back({el.first - 1, el.second});
+        dfs.push_back({el.first + 1, el.second});
+        dfs.push_back({el.first - 1, el.second + (el.first % 2 == 0 ? -1 : 1)});
+        dfs.push_back({el.first + 1, el.second + (el.first % 2 == 0 ? -1 : 1)});
+
+        this->set(el.first, el.second, 0);
+    }
+
+    if (found.size() >= matches)
+        return true;
+    
+    for (const std::pair<size_t, size_t>& el : found)
+        this->set(el.first, el.second, matchHue);
+
+    // TODO: awkward, maybe better to use a set to track visited instead of switching bubbles to/from 0.
+
+    return false;
+}
+
+bool GameBoard::setThenPop(const size_t row, const size_t col, const size_t hue, const size_t matches) {
+    this->set(row, col, hue);
+    return this->pop(row, col, matches);
 }
 
 /* --- protected --- */
 
-size_t GameBoard::hexGridSize(const size_t nRows) const {
-    return (nRows * hexAlign(0) + nRows * hexAlign(1) + 1) / 2;
-}
-
 bool GameBoard::oob(const size_t row, const size_t col) const {
-    // TODO: you can use size_t and only do the first two comparisons
     return row >= rows or col >= hexAlign(row);
 }
 
@@ -78,14 +84,6 @@ size_t GameBoard::at(const size_t row, const size_t col) const {
         throw std::out_of_range("Requested GameBoard::at(" + std::to_string(row) + ", " + std::to_string(col) + ") position is out of bounds.");
 
     return hexGridSize(row) + col;
-}
-
-void GameBoard::applyNbr(const size_t srcRow, const size_t srcCol, const size_t dstRow, const size_t dstCol) {
-    // TODO: Do not run multiple times on the same hue
-    if (oob(dstRow, dstCol) or oob(srcRow, srcCol))
-        return;
-
-    board[at(dstRow, dstCol)].neighbors += board[at(srcRow, srcCol)].empty() ? -1 : 1;
 }
 
 bool GameBoard::compare(const size_t row, const size_t col, const int rowOffset, const int colOffset) const {

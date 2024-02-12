@@ -1,4 +1,5 @@
 #include "window.hpp"
+#include "util.hpp"
 
 constexpr const char* GameWindow::BUBBLE_TEX_PATHS[BUBBLE_TEX_COUNT];
 
@@ -12,7 +13,7 @@ GameWindow::GameWindow(const size_t width, const size_t height, const size_t row
 
     font = LoadFontEx(FONT_PATH, FONT_SIZE, nullptr, 0);
     for (size_t i = 0; i < BUBBLE_TEX_COUNT; i++)
-        bubbleTexs[i] = LoadTexture(BUBBLE_TEX_PATHS[i]); // TODO: remember to move size_t back to size_t the whole project.
+        bubbleTexs[i] = LoadTexture(BUBBLE_TEX_PATHS[i]);
 
     radius = static_cast<float>(width) / (static_cast<float>(cols) + (cols % 2 == 1 ? 0.5f : 0)) / 2.0f; // NOTE: fit-to-width
 }
@@ -92,8 +93,8 @@ void GameWindow::drawDebugOverlay() {
 
 void GameWindow::drawDebugBouncy(const size_t hue) {
     static Vector2 bouncy = { static_cast<float>(width) / 2, static_cast<float>(height) / 2 };
-    static float xvel = -3.3f;
-    static float yvel = -1.3f;
+    static float xvel = -5.0f;
+    static float yvel = -4.0f;
 
     bouncy.x += xvel;
     bouncy.y += yvel;
@@ -106,9 +107,11 @@ void GameWindow::drawDebugBouncy(const size_t hue) {
     drawBubble(bouncy.x, bouncy.y, hue);
 
     try {
-        if (board.get(yToRow(bouncy.y), xyToCol(bouncy.x, bouncy.y)) == 0)
-            board.set(yToRow(bouncy.y), xyToCol(bouncy.x, bouncy.y), GetRandomValue(1, BUBBLE_TEX_COUNT));
-        if (board.shouldPop(yToRow(bouncy.y), xyToCol(bouncy.x, bouncy.y)))
-            board.set(yToRow(bouncy.y), xyToCol(bouncy.x, bouncy.y), 0);
+        const size_t row = yToRow(bouncy.y);
+        const size_t col = xyToCol(bouncy.x, bouncy.y);
+
+        if (!GameUtils::usedLast(row, col) and board.get(row, col) == 0)
+            board.setThenPop(row, col, 1);
+        
     } catch (const std::out_of_range& e) {}
 }
