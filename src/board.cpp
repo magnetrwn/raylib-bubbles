@@ -27,6 +27,23 @@ void GameBoard::set(const size_t row, const size_t col, const size_t hue) {
         return;
 
     board[at(row, col)] = hue;
+
+    // TODO: redundant hex grid neighbor calls, might benefit from higher order function (1)
+    applyNbr(row, col, row, col - 1);
+    applyNbr(row, col, row, col + 1);
+    applyNbr(row, col, row - 1, col);
+    applyNbr(row, col, row + 1, col);
+    applyNbr(row, col, row - 1, col + (row % 2 == 0 ? -1 : 1));
+    applyNbr(row, col, row + 1, col + (row % 2 == 0 ? -1 : 1));
+}
+
+bool GameBoard::attach(const size_t row, const size_t col, const size_t hue) {
+    if (board[at(row, col)].hasNbr() or (board[at(row, col)].empty() and row == 0)) {
+        set(row, col, hue);
+        return true;
+    }
+
+    return false;
 }
 
 bool GameBoard::pop(const size_t row, const size_t col, const size_t matches) {
@@ -47,6 +64,7 @@ bool GameBoard::pop(const size_t row, const size_t col, const size_t matches) {
 
         found.push_back(el);
 
+        // TODO: redundant hex grid neighbor calls, might benefit from higher order function (2)
         dfs.push_back({ el.first, el.second - 1 });
         dfs.push_back({ el.first, el.second + 1 });
         dfs.push_back({ el.first - 1, el.second });
@@ -68,11 +86,6 @@ bool GameBoard::pop(const size_t row, const size_t col, const size_t matches) {
     return false;
 }
 
-bool GameBoard::setThenPop(const size_t row, const size_t col, const size_t hue, const size_t matches) {
-    set(row, col, hue);
-    return pop(row, col, matches);
-}
-
 /* --- protected --- */
 
 bool GameBoard::oob(const size_t row, const size_t col) const {
@@ -84,6 +97,14 @@ size_t GameBoard::at(const size_t row, const size_t col) const {
         throw std::out_of_range("Requested GameBoard::at(" + std::to_string(row) + ", " + std::to_string(col) + ") position is out of bounds.");
 
     return hexGridSize(row) + col;
+}
+
+void GameBoard::applyNbr(const int srcRow, const int srcCol, const int dstRow, const int dstCol) {
+    // TODO: Do not run multiple times on the same hue
+    if (oob(dstRow, dstCol) or oob(srcRow, srcCol))
+        return;
+
+    board[at(dstRow, dstCol)].neighbors += board[at(srcRow, srcCol)].empty() ? -1 : 1;
 }
 
 bool GameBoard::compare(const size_t row, const size_t col, const int rowOffset, const int colOffset) const {

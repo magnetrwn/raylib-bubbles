@@ -74,38 +74,20 @@ void GameWindow::drawBubble(const float x, const float y, const size_t hue) {
 }
 
 void GameWindow::drawBoard() {
-    DrawLine(0, rowToY(board.getRows() - 1), width, rowToY(board.getRows() - 1), RED);
+    DrawLine(0, GameUtils::rowToY(board.getRows() - 1, radius), width, GameUtils::rowToY(board.getRows() - 1, radius), RED);
 
     for (size_t row = 0; row < board.getRows(); row++)
         for (size_t col = 0; col < board.hexAlign(row); col++) {
             size_t hue = board.get(row, col);
 
             if (hue != 0)
-                drawBubble(rowColToX(row, col), rowToY(row), hue);
+                drawBubble(GameUtils::rowColToX(row, col, radius), GameUtils::rowToY(row, radius), hue);
         }
 }
 
 void GameWindow::drawActions() {
     for (const GameActionMgr::BubbleData& bubble : actions.getAllStepData())
         drawBubble(bubble.x, bubble.y, bubble.hue);
-}
-
-/* --- protected --- */
-
-size_t GameWindow::xyToCol(const float x, const float y) const {
-    return static_cast<size_t>((x - (yToRow(y) % 2 == 0 ? 0 : radius)) / (2 * radius));
-}
-
-size_t GameWindow::yToRow(const float y) const {
-    return static_cast<size_t>(y / (2 * radius));
-}
-
-float GameWindow::rowColToX(const size_t row, const size_t col) const {
-    return static_cast<float>(col * 2) * radius + (row % 2 == 0 ? 0.0f : radius);
-}
-
-float GameWindow::rowToY(const size_t row) const {
-    return static_cast<float>(row * 2) * radius;
 }
 
 /*

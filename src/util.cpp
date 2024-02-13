@@ -29,3 +29,19 @@ bool GameUtils::usedLast(const size_t row, const size_t col) {
 
     return false;
 }
+
+size_t GameUtils::xyToCol(const float x, const float y, const float radius) {
+    return static_cast<size_t>((x - (yToRow(y, radius) % 2 == 0 ? 0 : radius)) / (2 * radius));
+}
+
+size_t GameUtils::yToRow(const float y, const float radius) {
+    return static_cast<size_t>(y / (2 * radius));
+}
+
+float GameUtils::rowColToX(const size_t row, const size_t col, const float radius) {
+    return static_cast<float>(col * 2) * radius + (row % 2 == 0 ? 0.0f : radius);
+}
+
+float GameUtils::rowToY(const size_t row, const float radius) {
+    return static_cast<float>(row * 2) * radius;
+}

@@ -54,11 +54,6 @@ protected:
     GameBoard board;
     GameActionMgr actions;
 
-    inline size_t xyToCol(const float x, const float y) const;
-    inline size_t yToRow(const float y) const;
-    inline float rowColToX(const size_t row, const size_t col) const;
-    inline float rowToY(const size_t row) const;
-
     //inline void drawDebugOverlay();
     //inline void drawDebugBouncy(const size_t hue = 1);
 };

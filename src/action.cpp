@@ -11,7 +11,7 @@ void GameActionMgr::ActionType::step() {
 
                 if (GameUtils::clamp(bubbleData[0].x, 0, parent.getWidth() - 2 * parent.getRadius()))
                     bubbleData[0].xVel *= -1;
-                if (GameUtils::clamp(bubbleData[0].y, 0, parent.getHeight() + 5.0f))
+                if (GameUtils::clamp(bubbleData[0].y, 0, parent.getHeight() + 20.0f))
                     bubbleData[0].yVel *= -1;
                 break;
             }
@@ -22,6 +22,12 @@ void GameActionMgr::ActionType::step() {
         case Effect::DROP:
             break;
     }
+}
+
+bool GameActionMgr::ActionType::shouldPrune() const {
+    return std::all_of(bubbleData.begin(), bubbleData.end(), [this] (const BubbleData& bubble) {
+        return bubble.x > parent.getWidth() or bubble.y > parent.getHeight() or bubble.x < 0 or bubble.y < 0;
+    }) or pruneFlag;
 }
 
 float GameActionMgr::getWidth() const {
@@ -45,12 +51,12 @@ void GameActionMgr::enqueue(const ActionType action) {
 }
 
 void GameActionMgr::stepAndPrune() {
-    actions.remove_if([this] (const ActionType& action) {
-        return shouldPrune(action);
-    });
-
     for (ActionType& action : actions)
         action.step();
+
+    actions.remove_if([] (const ActionType& action) {
+        return action.shouldPrune();
+    });
 }
 
 std::vector<GameActionMgr::BubbleData> GameActionMgr::getAllStepData() const {
@@ -60,14 +66,4 @@ std::vector<GameActionMgr::BubbleData> GameActionMgr::getAllStepData() const {
         all.insert(all.end(), action.bubbleData.begin(), action.bubbleData.end());
 
     return all;
-}
-
-/* --- protected --- */
-
-bool GameActionMgr::shouldPrune(const ActionType& action) const {
-    for (const BubbleData& bubble : action.bubbleData)
-        if (bubble.x <= width and bubble.y <= height and bubble.x >= 0 and bubble.y >= 0)
-            return false;
-
-    return true;
 }

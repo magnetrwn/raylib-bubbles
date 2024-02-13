@@ -28,12 +28,14 @@ public:
 
         const Effect effect;
         const GameActionMgr& parent;
-
         std::vector<BubbleData> bubbleData;
+        bool pruneFlag = false;
 
         ActionType(const Effect effect, const std::vector<BubbleData>& bubbleData, const GameActionMgr& mgr) : effect(effect), parent(mgr), bubbleData(bubbleData) {};
 
         void step();
+
+        bool shouldPrune() const;
     };
 
     GameActionMgr(const float width, const float height, const float radius, GameBoard& board) : width(width), height(height), radius(radius), board(board) {};
@@ -56,8 +58,6 @@ protected:
     
     // NOTE: moved to list because of remove_if copy/move assignment issues with vector, try profiling
     std::list<ActionType> actions;
-
-    bool shouldPrune(const ActionType& action) const;
 };
 
 #endif

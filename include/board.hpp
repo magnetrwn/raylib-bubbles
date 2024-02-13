@@ -3,16 +3,18 @@
 
 #include <vector>
 #include <stdexcept>
+#include <functional>
 
 class GameBoard {
 public:
-    struct Bubble {
+    struct BubbleCell {
         size_t hue;
+        size_t neighbors;
 
         // NOTE: Zero hue is empty space on the board, which is why the empty() method checks == 0.
-        Bubble(size_t hue = 0) : hue(hue) {}
+        BubbleCell(size_t hue = 0, size_t neighbors = 0) : hue(hue), neighbors(neighbors) {}
 
-        bool operator==(const Bubble& other) const {
+        bool operator==(const BubbleCell& other) const {
             return hue == other.hue;
         }
 
@@ -20,8 +22,12 @@ public:
             this->hue = hue;
         }
 
-        bool empty() const {
+        bool empty() const { // TODO: remove
             return hue == 0;
+        }
+
+        bool hasNbr() const { // TODO: remove
+            return neighbors != 0;
         }
     };
     
@@ -34,8 +40,10 @@ public:
 
     size_t get(const size_t row, const size_t col) const;
     void set(const size_t row, const size_t col, const size_t hue);
+
+    // NOTE: both of these return false on no change, so looping is possible
+    bool attach(const size_t row, const size_t col, const size_t hue);
     bool pop(const size_t row, const size_t col, const size_t matches = MATCHES_TO_POP);
-    bool setThenPop(const size_t row, const size_t col, const size_t hue, const size_t matches = MATCHES_TO_POP);
 
 protected: 
     static constexpr size_t MATCHES_TO_POP = 3;
@@ -43,10 +51,11 @@ protected:
     size_t rows;
     size_t cols;
 
-    std::vector<Bubble> board;
+    std::vector<BubbleCell> board;
 
     inline bool oob(const size_t row, const size_t col) const;
     inline size_t at(const size_t row, const size_t col) const;
+    inline void applyNbr(const int srcRow, const int srcCol, const int dstRow, const int dstCol);
 
     bool compare(const size_t row, const size_t col, const int rowOffset, const int colOffset) const;
 };
