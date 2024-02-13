@@ -6,11 +6,18 @@
 #include <algorithm>
 
 #include "board.hpp"
-
-// NOTE: std::tuple<size_t /*row*/, size_t /*col*/, size_t /*hue*/>
+#include "util.hpp"
 
 class GameActionMgr {
 public:
+    struct BubbleData {
+        float x;
+        float y;
+        size_t hue;
+        float xVel;
+        float yVel;
+    };
+
     struct ActionType {
         enum class Effect {
             LAUNCH,
@@ -18,20 +25,32 @@ public:
             DROP
         };
 
-        Effect effect;
-        std::vector<std::tuple<size_t, size_t, size_t>> bubbleData;
-        
+        Effect effect; // TODO: why can't I use const here...
+        const GameActionMgr* parent;
+
+        std::vector<BubbleData> bubbleData;
+
+        ActionType(const Effect effect, const std::vector<BubbleData>& bubbleData, const GameActionMgr* mgr) : effect(effect), parent(mgr), bubbleData(bubbleData) {};
+
         void step();
     };
 
-    GameActionMgr(const float width, const float height) : width(width), height(height) {};
+    GameActionMgr(const float width, const float height, const float radius) : width(width), height(height), radius(radius) {};
+
+    float getWidth() const;
+    float getHeight() const;
+    float getRadius() const;
+    size_t size() const;
 
     void enqueue(const ActionType action);
     void stepAndPrune();
 
+    std::vector<BubbleData> getAllStepData() const;
+
 protected:
     float width;
     float height;
+    float radius;
 
     std::vector<ActionType> actions;
 

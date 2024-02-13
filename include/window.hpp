@@ -19,7 +19,7 @@ public:
     void drawText(const std::string text, const float x, const float y, const float scale = 1.0f, const Color color = WHITE);
     void drawBubble(const float x, const float y, const size_t hue);
     void drawBoard();
-    void drawLimitLine();
+    void drawActions();
 
 protected:
     static constexpr float DEFAULT_WIDTH = 600.0f;
@@ -59,8 +59,8 @@ protected:
     inline float rowColToX(const size_t row, const size_t col) const;
     inline float rowToY(const size_t row) const;
 
-    inline void drawDebugOverlay();
-    inline void drawDebugBouncy(const size_t hue = 1);
+    //inline void drawDebugOverlay();
+    //inline void drawDebugBouncy(const size_t hue = 1);
 };
 
 #endif

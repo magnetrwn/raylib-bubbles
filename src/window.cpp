@@ -1,4 +1,6 @@
 #include "window.hpp"
+#include "action.hpp"
+#include <ctime>
 #include <raylib.h>
 
 constexpr const char* GameWindow::BUBBLE_TEX_PATHS[BUBBLE_TEX_COUNT];
@@ -6,7 +8,9 @@ constexpr const char* GameWindow::BUBBLE_TEX_PATHS[BUBBLE_TEX_COUNT];
 /* --- initialization --- */
 
 GameWindow::GameWindow(const float width, const float height, const size_t rows, const size_t cols, const char* title, const size_t fps) 
-    : width(width), height(height), fps(fps), board(rows, cols), actions(width, height) {
+    : width(width), height(height), fps(fps), 
+      radius(width / (static_cast<float>(cols) + (cols % 2 == 1 ? 0.5f : 0)) / 2.0f), // NOTE: radius to fit-to-width
+      board(rows, cols), actions(width, height, radius) {
 
     InitWindow(width, height, title);
     SetTargetFPS(fps);
@@ -14,8 +18,6 @@ GameWindow::GameWindow(const float width, const float height, const size_t rows,
     font = LoadFontEx(FONT_PATH, FONT_SIZE, nullptr, 0);
     for (size_t i = 0; i < BUBBLE_TEX_COUNT; i++)
         bubbleTexs[i] = LoadTexture(BUBBLE_TEX_PATHS[i]);
-
-    radius = width / (static_cast<float>(cols) + (cols % 2 == 1 ? 0.5f : 0)) / 2.0f; // NOTE: fit-to-width
 }
 
 GameWindow::~GameWindow() {
@@ -28,13 +30,30 @@ GameWindow::~GameWindow() {
 /* --- public --- */
 
 void GameWindow::run() {
+    double lastTime = GetTime();
+
     while (!WindowShouldClose()) {
         BeginDrawing();
             ClearBackground(BLACK);
             
             drawBoard();
-            drawDebugBouncy();
-            drawDebugOverlay();
+            if (GetTime() - lastTime >= 0.01f) {
+                //TraceLog(LOG_INFO, std::to_string(GetTime() - lastTime).c_str());
+                actions.enqueue({GameActionMgr::ActionType::Effect::LAUNCH, {
+                {
+                        width / 2, height / 2, 
+                        static_cast<size_t>(GetRandomValue(1, BUBBLE_TEX_COUNT)), 
+                        static_cast<float>(GetRandomValue(0, RAND_MAX) / static_cast<float>(RAND_MAX) * 4.0f - 2.0f) * 5.0f, 
+                        static_cast<float>(GetRandomValue(0, RAND_MAX) / static_cast<float>(RAND_MAX) * 4.0f - 2.0f) * 5.0f
+                    }
+                }, &actions});
+                lastTime = GetTime();
+            }
+            
+            drawActions();
+            actions.stepAndPrune();
+
+            drawText(std::to_string(actions.size()), 20.0f, height - 80.0f, 1.5f, GOLD);
 
         EndDrawing();
     }
@@ -66,6 +85,11 @@ void GameWindow::drawBoard() {
         }
 }
 
+void GameWindow::drawActions() {
+    for (const GameActionMgr::BubbleData& bubble : actions.getAllStepData())
+        drawBubble(bubble.x, bubble.y, bubble.hue);
+}
+
 /* --- protected --- */
 
 size_t GameWindow::xyToCol(const float x, const float y) const {
@@ -84,6 +108,7 @@ float GameWindow::rowToY(const size_t row) const {
     return static_cast<float>(row * 2) * radius;
 }
 
+/*
 void GameWindow::drawDebugOverlay() {
     Vector2 mousePos = GetMousePosition();
     drawText("col: " + std::to_string(xyToCol(mousePos.x, mousePos.y)) + ", row: " + std::to_string(yToRow(mousePos.y)),
@@ -114,4 +139,4 @@ void GameWindow::drawDebugBouncy(const size_t hue) {
             board.setThenPop(row, col, GetRandomValue(1, 4));
 
     } catch (const std::out_of_range& e) {}
-}
+}*/
