@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <stdexcept>
-#include <functional>
+#include <algorithm>
 
 class GameBoard {
 public:
@@ -18,16 +18,12 @@ public:
             return hue == other.hue;
         }
 
+        bool operator!=(const BubbleCell& other) const {
+            return hue != other.hue;
+        }
+
         void operator=(const size_t hue) {
             this->hue = hue;
-        }
-
-        bool empty() const { // TODO: remove
-            return hue == 0;
-        }
-
-        bool hasNbr() const { // TODO: remove
-            return neighbors != 0;
         }
     };
     
@@ -41,9 +37,14 @@ public:
     size_t get(const size_t row, const size_t col) const;
     void set(const size_t row, const size_t col, const size_t hue);
 
-    // NOTE: both of these return false on no change, so looping is possible
+    // NOTE: both of these return true on success
     bool attach(const size_t row, const size_t col, const size_t hue);
     bool pop(const size_t row, const size_t col, const size_t matches = MATCHES_TO_POP);
+
+    // NOTE: attach + pop, return attach
+    bool update(const size_t row, const size_t col, const size_t hue, const size_t matches = MATCHES_TO_POP);
+
+    void clear();
 
 protected: 
     static constexpr size_t MATCHES_TO_POP = 3;

@@ -10,7 +10,8 @@ constexpr const char* GameWindow::BUBBLE_TEX_PATHS[BUBBLE_TEX_COUNT];
 GameWindow::GameWindow(const float width, const float height, const size_t rows, const size_t cols, const char* title, const size_t fps) 
     : width(width), height(height), fps(fps), 
       radius(width / (static_cast<float>(cols) + (cols % 2 == 1 ? 0.5f : 0)) / 2.0f), // NOTE: radius to fit-to-width
-      board(rows, cols), actions(width, height, radius, board) {
+      board(rows, cols), actions(width, height, radius, board),
+      limitLineY(GameUtils::rowToY(board.getRows() - 1, radius)) {
 
     InitWindow(width, height, title);
     SetTargetFPS(fps);
@@ -37,13 +38,13 @@ void GameWindow::run() {
             ClearBackground(BLACK);
             
             drawBoard();
-            if (GetTime() - lastTime >= 0.75f) {
+            if (GetTime() - lastTime >= 0.125f) {
                 //TraceLog(LOG_INFO, std::to_string(GetTime() - lastTime).c_str());
                 actions.enqueue({GameActionMgr::ActionType::Effect::LAUNCH, {
                 {
-                        width / 2, height / 2, 
+                        width / 2, height - 2 * radius, 
                         static_cast<float>(GetRandomValue(0, RAND_MAX) / static_cast<float>(RAND_MAX) * 4.0f - 2.0f) * 5.0f, 
-                        static_cast<float>(GetRandomValue(0, RAND_MAX) / static_cast<float>(RAND_MAX) * 4.0f - 2.0f) * 5.0f,
+                        static_cast<float>(GetRandomValue(0, RAND_MAX) / static_cast<float>(RAND_MAX) * -5.0f) * 3.0f,
                         static_cast<size_t>(GetRandomValue(1, BUBBLE_TEX_COUNT))
                     }
                 }, actions});
@@ -74,7 +75,7 @@ void GameWindow::drawBubble(const float x, const float y, const size_t hue) {
 }
 
 void GameWindow::drawBoard() {
-    DrawLine(0, GameUtils::rowToY(board.getRows() - 1, radius), width, GameUtils::rowToY(board.getRows() - 1, radius), RED);
+    DrawLine(0, limitLineY, width, limitLineY, RED);
 
     for (size_t row = 0; row < board.getRows(); row++)
         for (size_t col = 0; col < board.hexAlign(row); col++) {

@@ -40,9 +40,6 @@ public:
 
     GameActionMgr(const float width, const float height, const float radius, GameBoard& board) : width(width), height(height), radius(radius), board(board) {};
 
-    float getWidth() const;
-    float getHeight() const;
-    float getRadius() const;
     size_t size() const;
 
     void enqueue(const ActionType action);

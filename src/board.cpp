@@ -38,7 +38,7 @@ void GameBoard::set(const size_t row, const size_t col, const size_t hue) {
 }
 
 bool GameBoard::attach(const size_t row, const size_t col, const size_t hue) {
-    if (board[at(row, col)].hasNbr() or (board[at(row, col)].empty() and row == 0)) {
+    if (board[at(row, col)] == 0 and (board[at(row, col)].neighbors != 0 or row == 0)) {
         set(row, col, hue);
         return true;
     }
@@ -47,7 +47,7 @@ bool GameBoard::attach(const size_t row, const size_t col, const size_t hue) {
 }
 
 bool GameBoard::pop(const size_t row, const size_t col, const size_t matches) {
-    if (board[at(row, col)].empty())
+    if (board[at(row, col)] == 0)
         return false;
 
     const size_t matchHue = board[at(row, col)].hue;
@@ -86,6 +86,20 @@ bool GameBoard::pop(const size_t row, const size_t col, const size_t matches) {
     return false;
 }
 
+bool GameBoard::update(const size_t row, const size_t col, const size_t hue, const size_t matches) {
+    if (attach(row, col, hue)) {
+        pop(row, col, matches);
+        return true;
+    }
+
+    return false;
+}
+
+void GameBoard::clear() {
+    for (BubbleCell& cell : board)
+        cell = {0, 0};
+}
+
 /* --- protected --- */
 
 bool GameBoard::oob(const size_t row, const size_t col) const {
@@ -104,7 +118,7 @@ void GameBoard::applyNbr(const int srcRow, const int srcCol, const int dstRow, c
     if (oob(dstRow, dstCol) or oob(srcRow, srcCol))
         return;
 
-    board[at(dstRow, dstCol)].neighbors += board[at(srcRow, srcCol)].empty() ? -1 : 1;
+    board[at(dstRow, dstCol)].neighbors += board[at(srcRow, srcCol)] == 0 ? -1 : 1;
 }
 
 bool GameBoard::compare(const size_t row, const size_t col, const int rowOffset, const int colOffset) const {

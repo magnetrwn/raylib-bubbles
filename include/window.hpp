@@ -54,6 +54,8 @@ protected:
     GameBoard board;
     GameActionMgr actions;
 
+    float limitLineY;
+
     //inline void drawDebugOverlay();
     //inline void drawDebugBouncy(const size_t hue = 1);
 };
