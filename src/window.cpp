@@ -37,14 +37,14 @@ void GameWindow::run() {
             ClearBackground(BLACK);
             
             drawBoard();
-            if (GetTime() - lastTime >= 0.01f) {
+            if (GetTime() - lastTime >= 0.75f) {
                 //TraceLog(LOG_INFO, std::to_string(GetTime() - lastTime).c_str());
                 actions.enqueue({GameActionMgr::ActionType::Effect::LAUNCH, {
                 {
                         width / 2, height / 2, 
-                        static_cast<size_t>(GetRandomValue(1, BUBBLE_TEX_COUNT)), 
                         static_cast<float>(GetRandomValue(0, RAND_MAX) / static_cast<float>(RAND_MAX) * 4.0f - 2.0f) * 5.0f, 
-                        static_cast<float>(GetRandomValue(0, RAND_MAX) / static_cast<float>(RAND_MAX) * 4.0f - 2.0f) * 5.0f
+                        static_cast<float>(GetRandomValue(0, RAND_MAX) / static_cast<float>(RAND_MAX) * 4.0f - 2.0f) * 5.0f,
+                        static_cast<size_t>(GetRandomValue(1, BUBBLE_TEX_COUNT))
                     }
                 }, &actions});
                 lastTime = GetTime();

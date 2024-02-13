@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12.0)
 project(bubbles)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=leak")
 
 find_package(raylib REQUIRED)
@@ -33,6 +33,6 @@ target_link_libraries(
 
 target_compile_features(
     ${PROJECT_NAME}
-    PRIVATE cxx_std_14
+    PRIVATE cxx_std_11
     PRIVATE cxx_lambda_init_captures
 )

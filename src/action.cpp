@@ -65,8 +65,8 @@ std::vector<GameActionMgr::BubbleData> GameActionMgr::getAllStepData() const {
 /* --- protected --- */
 
 bool GameActionMgr::shouldPrune(const ActionType& action) const {
-    for (const auto& bubble : action.bubbleData)
-        if (bubble.x <= width and bubble.y <= height)
+    for (const BubbleData& bubble : action.bubbleData)
+        if (bubble.x <= width and bubble.y <= height and bubble.x >= 0 and bubble.y >= 0)
             return false;
 
     return true;

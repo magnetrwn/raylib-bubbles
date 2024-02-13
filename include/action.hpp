@@ -13,9 +13,9 @@ public:
     struct BubbleData {
         float x;
         float y;
-        size_t hue;
         float xVel;
         float yVel;
+        size_t hue;
     };
 
     struct ActionType {

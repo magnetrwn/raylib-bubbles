@@ -6,7 +6,7 @@
 
 **Raylib Bubbles** is a compact puzzle game following the classic bubble shooter game concept. It relies on the [Raylib](https://www.raylib.com/) library for rendering and input handling.
 
-The game is written in C++14 and is built with CMake. It is intended to be a **well structured example of a game written with Raylib**.
+The game is written in C++11 and is built with CMake. It is intended to be a **well structured example of a game written with Raylib**.
 
 ### Quick Start
 
@@ -49,7 +49,7 @@ As mentioned earlier, there will also be a zipped build generated in the root pr
 
 ## Technical Summary
 
-The project is written in C++14 and, while it uses Raylib for rendering graphics, the API has not been mixed in an inseparable manner with the game logic. You will find most uses of Raylib in the `GameWindow` class, in `include/window.hpp`. It is purposefully not difficult to replace Raylib with another library, or to use the game logic in a different context.
+The project is written in C++11 and, while it uses Raylib for rendering graphics, the API has not been mixed in an inseparable manner with the game logic. You will find most uses of Raylib in the `GameWindow` class, in `include/window.hpp`. It is purposefully not difficult to replace Raylib with another library, or to use the game logic in a different context.
 
 ### Board
 
@@ -72,5 +72,11 @@ Available as a public member of `GameBoard`, the `Bubble` class is a simple cont
 ### Action
 
 An action is something that takes place on the window with bubbles, but is not snapped to the board grid. This is essential to allow effects and animations to be displayed.
+
+The `GameActionMgr` class in `include/action.hpp` handles a queue of actions, which are applied consecutively. Each action has a state, and the queue is abstracted to be processed in the game loop transparently. The state of each action is stepped on every cycle, and eventually *pruned* when the action has left the relevant screen area. The action is removed from the queue when it is done.
+
+More specifically, the queue is made up of `ActionType` objects, which identify each action through an enum class. A possible improvement might be to specialize the ActionType class to only contain necessary struct variables and alter the `step()` method properly through variant visiting, but not in C++11 of course.
+
+There is also a basic container struct `BubbleData`, which holds the state (coordinates, speed and hue) of a bubble during the animation.
 
 **TODO**
