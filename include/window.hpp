@@ -46,7 +46,7 @@ protected:
     float width;
     float height;
     size_t fps;
-    float radius; // TODO: if you ever want multiple boards, you must add a parameter for this
+    float radius;
 
     Font font;
     Texture2D bubbleTexs[BUBBLE_TEX_COUNT];

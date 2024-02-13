@@ -10,7 +10,7 @@ constexpr const char* GameWindow::BUBBLE_TEX_PATHS[BUBBLE_TEX_COUNT];
 GameWindow::GameWindow(const float width, const float height, const size_t rows, const size_t cols, const char* title, const size_t fps) 
     : width(width), height(height), fps(fps), 
       radius(width / (static_cast<float>(cols) + (cols % 2 == 1 ? 0.5f : 0)) / 2.0f), // NOTE: radius to fit-to-width
-      board(rows, cols), actions(width, height, radius) {
+      board(rows, cols), actions(width, height, radius, board) {
 
     InitWindow(width, height, title);
     SetTargetFPS(fps);
@@ -46,7 +46,7 @@ void GameWindow::run() {
                         static_cast<float>(GetRandomValue(0, RAND_MAX) / static_cast<float>(RAND_MAX) * 4.0f - 2.0f) * 5.0f,
                         static_cast<size_t>(GetRandomValue(1, BUBBLE_TEX_COUNT))
                     }
-                }, &actions});
+                }, actions});
                 lastTime = GetTime();
             }
             

@@ -4,6 +4,7 @@
 #include <vector>
 #include <tuple>
 #include <algorithm>
+#include <list>
 
 #include "board.hpp"
 #include "util.hpp"
@@ -25,17 +26,17 @@ public:
             DROP
         };
 
-        Effect effect; // TODO: why can't I use const here...
-        const GameActionMgr* parent;
+        const Effect effect;
+        const GameActionMgr& parent;
 
         std::vector<BubbleData> bubbleData;
 
-        ActionType(const Effect effect, const std::vector<BubbleData>& bubbleData, const GameActionMgr* mgr) : effect(effect), parent(mgr), bubbleData(bubbleData) {};
+        ActionType(const Effect effect, const std::vector<BubbleData>& bubbleData, const GameActionMgr& mgr) : effect(effect), parent(mgr), bubbleData(bubbleData) {};
 
         void step();
     };
 
-    GameActionMgr(const float width, const float height, const float radius) : width(width), height(height), radius(radius) {};
+    GameActionMgr(const float width, const float height, const float radius, GameBoard& board) : width(width), height(height), radius(radius), board(board) {};
 
     float getWidth() const;
     float getHeight() const;
@@ -51,8 +52,10 @@ protected:
     float width;
     float height;
     float radius;
-
-    std::vector<ActionType> actions;
+    GameBoard& board;
+    
+    // NOTE: moved to list because of remove_if copy/move assignment issues with vector, try profiling
+    std::list<ActionType> actions;
 
     bool shouldPrune(const ActionType& action) const;
 };

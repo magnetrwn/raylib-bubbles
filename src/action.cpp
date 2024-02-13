@@ -9,9 +9,9 @@ void GameActionMgr::ActionType::step() {
                 bubbleData[0].x += bubbleData[0].xVel;
                 bubbleData[0].y += bubbleData[0].yVel;
 
-                if (GameUtils::clamp(bubbleData[0].x, 0, parent->getWidth() - 2 * parent->getRadius()))
+                if (GameUtils::clamp(bubbleData[0].x, 0, parent.getWidth() - 2 * parent.getRadius()))
                     bubbleData[0].xVel *= -1;
-                if (GameUtils::clamp(bubbleData[0].y, 0, parent->getHeight() + 5.0f))
+                if (GameUtils::clamp(bubbleData[0].y, 0, parent.getHeight() + 5.0f))
                     bubbleData[0].yVel *= -1;
                 break;
             }
@@ -45,9 +45,9 @@ void GameActionMgr::enqueue(const ActionType action) {
 }
 
 void GameActionMgr::stepAndPrune() {
-    actions.erase(std::remove_if(actions.begin(), actions.end(), [this] (const ActionType& action) {
+    actions.remove_if([this] (const ActionType& action) {
         return shouldPrune(action);
-    }), actions.end());
+    });
 
     for (ActionType& action : actions)
         action.step();
