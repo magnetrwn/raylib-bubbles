@@ -38,7 +38,7 @@ void GameWindow::run() {
             ClearBackground(BLACK);
             
             drawBoard();
-            if (GetTime() - lastTime >= 0.125f) {
+            if (GetTime() - lastTime >= 0.002f) {
                 //TraceLog(LOG_INFO, std::to_string(GetTime() - lastTime).c_str());
                 actions.enqueue({GameActionMgr::ActionType::Effect::LAUNCH, {
                 {

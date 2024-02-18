@@ -5,6 +5,7 @@
 #include <tuple>
 #include <algorithm>
 #include <list>
+#include <stdexcept>
 
 #include "board.hpp"
 #include "util.hpp"
@@ -21,9 +22,7 @@ public:
 
     struct ActionType {
         enum class Effect {
-            LAUNCH,
-            POP,
-            DROP
+            LAUNCH
         };
 
         const Effect effect;

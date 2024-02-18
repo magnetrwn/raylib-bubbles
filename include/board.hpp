@@ -2,6 +2,7 @@
 #define BOARD_HPP_
 
 #include <vector>
+#include <unordered_set>
 #include <stdexcept>
 #include <algorithm>
 
@@ -40,6 +41,8 @@ public:
     // NOTE: both of these return true on success
     bool attach(const size_t row, const size_t col, const size_t hue);
     bool pop(const size_t row, const size_t col, const size_t matches = MATCHES_TO_POP);
+    
+    void dropFloating();
 
     // NOTE: attach + pop, return attach
     bool update(const size_t row, const size_t col, const size_t hue, const size_t matches = MATCHES_TO_POP);
@@ -56,7 +59,8 @@ protected:
 
     inline bool oob(const size_t row, const size_t col) const;
     inline size_t at(const size_t row, const size_t col) const;
-    inline void applyNbr(const int srcRow, const int srcCol, const int dstRow, const int dstCol);
+
+    inline void applyNbr(const size_t srcRow, const size_t srcCol, const size_t dstRow, const size_t dstCol);
 
     bool compare(const size_t row, const size_t col, const int rowOffset, const int colOffset) const;
 };

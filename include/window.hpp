@@ -40,8 +40,8 @@ protected:
         "res/sprites/bubble_6.png"
     };
 
-    static constexpr size_t DEFAULT_ROWS = 14;
-    static constexpr size_t DEFAULT_COLS = 10;
+    static constexpr size_t DEFAULT_ROWS = 140;
+    static constexpr size_t DEFAULT_COLS = 100;
 
     float width;
     float height;
