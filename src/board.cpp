@@ -1,5 +1,4 @@
 #include "board.hpp"
-#include <cstddef>
 
 /* --- public --- */
 
@@ -35,6 +34,16 @@ void GameBoard::set(const size_t row, const size_t col, const size_t hue) {
     applyNbr(row, col, row + 1, col);
     applyNbr(row, col, row - 1, col + (row % 2 == 0 ? -1 : 1));
     applyNbr(row, col, row + 1, col + (row % 2 == 0 ? -1 : 1));
+}
+
+size_t GameBoard::count() const {
+    return std::count_if(board.begin(), board.end(), [] (const BubbleCell& cell) {
+        return cell.hue != 0;
+    });
+}
+
+bool GameBoard::oob(const size_t row, const size_t col) const {
+    return row >= rows or col >= hexAlign(row);
 }
 
 bool GameBoard::attach(const size_t row, const size_t col, const size_t hue) {
@@ -89,6 +98,7 @@ void GameBoard::dropFloating() {
     // NOTE: this DFS tries to reach the top row of the board on all cells
     
     std::unordered_set<size_t> visited;
+    std::vector<std::pair<size_t, size_t>> allFloatingFound;
 
     for (size_t row = 0; row < rows; row++)
         for (size_t col = 0; col < hexAlign(row); col++) {
@@ -122,9 +132,11 @@ void GameBoard::dropFloating() {
                 dfs.push_back({ el.first + 1, el.second + (el.first % 2 == 0 ? -1 : 1) });
             }
 
-            for (const std::pair<size_t, size_t>& el : found)
-                set(el.first, el.second, 0);
+            allFloatingFound.insert(allFloatingFound.end(), found.begin(), found.end());
         }
+
+    for (const std::pair<size_t, size_t>& el : allFloatingFound)
+        set(el.first, el.second, 0);
 }
 
 /*
@@ -138,8 +150,8 @@ bool GameBoard::slide(const size_t row, const size_t col) {
 
 bool GameBoard::update(const size_t row, const size_t col, const size_t hue, const size_t matches) {
     if (attach(row, col, hue)) {
-        if (pop(row, col, matches))
-            dropFloating();
+        pop(row, col, matches);
+        dropFloating();
         return true;
     }
 
@@ -152,10 +164,6 @@ void GameBoard::clear() {
 }
 
 /* --- protected --- */
-
-bool GameBoard::oob(const size_t row, const size_t col) const {
-    return row >= rows or col >= hexAlign(row);
-}
 
 size_t GameBoard::at(const size_t row, const size_t col) const {
     if (oob(row, col))

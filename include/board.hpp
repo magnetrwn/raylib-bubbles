@@ -38,10 +38,14 @@ public:
     size_t get(const size_t row, const size_t col) const;
     void set(const size_t row, const size_t col, const size_t hue);
 
+    size_t count() const;
+    
+    bool oob(const size_t row, const size_t col) const;
+
     // NOTE: both of these return true on success
     bool attach(const size_t row, const size_t col, const size_t hue);
     bool pop(const size_t row, const size_t col, const size_t matches = MATCHES_TO_POP);
-    
+
     void dropFloating();
 
     // NOTE: attach + pop, return attach
@@ -57,9 +61,7 @@ protected:
 
     std::vector<BubbleCell> board;
 
-    inline bool oob(const size_t row, const size_t col) const;
     inline size_t at(const size_t row, const size_t col) const;
-
     inline void applyNbr(const size_t srcRow, const size_t srcCol, const size_t dstRow, const size_t dstCol);
 
     bool compare(const size_t row, const size_t col, const int rowOffset, const int colOffset) const;

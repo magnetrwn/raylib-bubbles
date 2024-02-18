@@ -15,14 +15,11 @@ void GameActionMgr::ActionType::step() {
         if (GameUtils::clamp(bubbleData[0].y, 0, parent.height + 20.0f))
             bubbleData[0].yVel *= -1;
 
-        try {
-            const size_t row = GameUtils::yToRow(bubbleData[0].y, parent.radius);
-            const size_t col = GameUtils::xyToCol(bubbleData[0].x + parent.radius, bubbleData[0].y, parent.radius);
+        const size_t row = GameUtils::yToRow(bubbleData[0].y, parent.radius);
+        const size_t col = GameUtils::xyToCol(bubbleData[0].x + parent.radius, bubbleData[0].y, parent.radius);
 
-            if (!GameUtils::usedLast(row, col))
-                pruneFlag = parent.board.update(row, col, bubbleData[0].hue);
-
-        } catch (const std::out_of_range& e) {} // TODO: temporary, testing
+        if (!parent.board.oob(row, col) and !GameUtils::usedLast(row, col))
+            pruneFlag = parent.board.update(row, col, bubbleData[0].hue);
     }
 }
 

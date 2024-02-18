@@ -11,8 +11,6 @@ file(GLOB PROJECT_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
 )
 
-#add_compile_definitions(DEBUG)
-
 if(MSVC)
     add_compile_options(/w4)
 else()

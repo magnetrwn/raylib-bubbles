@@ -1,6 +1,4 @@
 #include "window.hpp"
-#include "action.hpp"
-#include <ctime>
 #include <raylib.h>
 
 constexpr const char* GameWindow::BUBBLE_TEX_PATHS[BUBBLE_TEX_COUNT];
@@ -31,30 +29,38 @@ GameWindow::~GameWindow() {
 /* --- public --- */
 
 void GameWindow::run() {
-    double lastTime = GetTime();
+    size_t hueSelected = 1;
 
     while (!WindowShouldClose()) {
         BeginDrawing();
             ClearBackground(BLACK);
             
             drawBoard();
-            if (GetTime() - lastTime >= 0.002f) {
-                //TraceLog(LOG_INFO, std::to_string(GetTime() - lastTime).c_str());
+
+            /* --- debug shooter --- */
+
+            drawBubble(width / 2 - radius, height - 2 * radius, hueSelected);
+
+            if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
+                hueSelected = 1 + hueSelected % BUBBLE_TEX_COUNT;
+
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
                 actions.enqueue({GameActionMgr::ActionType::Effect::LAUNCH, {
                 {
-                        width / 2, height - 2 * radius, 
-                        static_cast<float>(GetRandomValue(0, RAND_MAX) / static_cast<float>(RAND_MAX) * 4.0f - 2.0f) * 5.0f, 
-                        static_cast<float>(GetRandomValue(0, RAND_MAX) / static_cast<float>(RAND_MAX) * -5.0f) * 3.0f,
-                        static_cast<size_t>(GetRandomValue(1, BUBBLE_TEX_COUNT))
+                        width / 2 - radius, height - 2 * radius, 
+                        (GetMousePosition().x - width / 2) / 30.0f,
+                        (GetMousePosition().y - height) / 30.0f,
+                        static_cast<size_t>(hueSelected)
                     }
                 }, actions});
-                lastTime = GetTime();
-            }
+
+            /* --- end of debug shooter --- */
             
             drawActions();
             actions.stepAndPrune();
 
-            drawText(std::to_string(actions.size()), 20.0f, height - 80.0f, 1.5f, GOLD);
+            drawText(std::to_string(actions.size()), 15.0f, height - 55.0f, 1.0f, GOLD);
+            drawText(std::to_string(board.count()), 115.0f, height - 55.0f, 1.0f, LIGHTGRAY);
 
         EndDrawing();
     }
@@ -90,36 +96,3 @@ void GameWindow::drawActions() {
     for (const GameActionMgr::BubbleData& bubble : actions.getAllStepData())
         drawBubble(bubble.x, bubble.y, bubble.hue);
 }
-
-/*
-void GameWindow::drawDebugOverlay() {
-    Vector2 mousePos = GetMousePosition();
-    drawText("col: " + std::to_string(xyToCol(mousePos.x, mousePos.y)) + ", row: " + std::to_string(yToRow(mousePos.y)),
-        20.0f, height - 64.0f);
-    drawBubble(mousePos.x, mousePos.y, 1);
-}
-
-void GameWindow::drawDebugBouncy(const size_t hue) {
-    static Vector2 bouncy = { width / 2, height / 2 };
-    static float xvel = -5.0f;
-    static float yvel = -4.0f;
-
-    bouncy.x += xvel;
-    bouncy.y += yvel;
-
-    if (GameUtils::clamp(bouncy.x, 0, width - 2 * radius))
-        xvel *= -1;
-    if (GameUtils::clamp(bouncy.y, 0, height - 2 * radius))
-        yvel *= -1;
-
-    drawBubble(bouncy.x, bouncy.y, hue);
-
-    try {
-        const size_t row = yToRow(bouncy.y);
-        const size_t col = xyToCol(bouncy.x, bouncy.y);
-
-        if (!GameUtils::usedLast(row, col) and board.get(row, col) == 0)
-            board.setThenPop(row, col, GetRandomValue(1, 4));
-
-    } catch (const std::out_of_range& e) {}
-}*/

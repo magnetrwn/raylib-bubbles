@@ -30,12 +30,18 @@ bool GameUtils::usedLast(const size_t row, const size_t col) {
     return false;
 }
 
-size_t GameUtils::xyToCol(const float x, const float y, const float radius) {
-    return static_cast<size_t>((x - (yToRow(y, radius) % 2 == 0 ? 0 : radius)) / (2 * radius));
+// TODO: all these could be constexpr if radius were constexpr!
+
+int GameUtils::xyToCol(const float x, const float y, const float radius) {
+    // NOTE: commented out underflow bounds check, it should be handled by the caller
+    //const int col = ((x - (yToRow(y, radius) % 2 == 0 ? 0 : radius)) / (2 * radius));
+    //return col < 0 ? 0 : static_cast<size_t>(col);
+    
+    return static_cast<int>(((x - (yToRow(y, radius) % 2 == 0 ? 0 : radius)) / (2 * radius)));
 }
 
-size_t GameUtils::yToRow(const float y, const float radius) {
-    return static_cast<size_t>(y / (2 * radius));
+int GameUtils::yToRow(const float y, const float radius) {
+    return static_cast<int>(y / (2 * radius));
 }
 
 float GameUtils::rowColToX(const size_t row, const size_t col, const float radius) {

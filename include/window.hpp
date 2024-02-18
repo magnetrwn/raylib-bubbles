@@ -40,8 +40,8 @@ protected:
         "res/sprites/bubble_6.png"
     };
 
-    static constexpr size_t DEFAULT_ROWS = 140;
-    static constexpr size_t DEFAULT_COLS = 100;
+    static constexpr size_t DEFAULT_ROWS = 14;
+    static constexpr size_t DEFAULT_COLS = 10;
 
     float width;
     float height;
@@ -56,8 +56,7 @@ protected:
 
     float limitLineY;
 
-    //inline void drawDebugOverlay();
-    //inline void drawDebugBouncy(const size_t hue = 1);
+    inline void drawDebugOverlay();
 };
 
 #endif

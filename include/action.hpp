@@ -2,7 +2,6 @@
 #define ACTION_HPP_
 
 #include <vector>
-#include <tuple>
 #include <algorithm>
 #include <list>
 #include <stdexcept>

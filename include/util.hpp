@@ -10,8 +10,8 @@ public:
     static bool usedLast(const size_t row, const size_t col);
 
     // NOTE: hexagonal grid offset conversion tools
-    static size_t xyToCol(const float x, const float y, const float radius);
-    static size_t yToRow(const float y, const float radius);
+    static int xyToCol(const float x, const float y, const float radius);
+    static int yToRow(const float y, const float radius);
     static float rowColToX(const size_t row, const size_t col, const float radius);
     static float rowToY(const size_t row, const float radius);
 };
