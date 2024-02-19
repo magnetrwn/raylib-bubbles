@@ -22,18 +22,22 @@ size_t GameBoard::get(const size_t row, const size_t col) const {
     return board[at(row, col)].hue;
 }
 
+size_t GameBoard::getNbrs(const size_t row, const size_t col) const {
+    return board[at(row, col)].neighbors;
+}
+
 void GameBoard::set(const size_t row, const size_t col, const size_t hue) {
     if (board[at(row, col)] == hue)
         return;
 
     board[at(row, col)] = hue;
 
-    applyNbr(row, col, row, col - 1);
-    applyNbr(row, col, row, col + 1);
-    applyNbr(row, col, row - 1, col);
-    applyNbr(row, col, row + 1, col);
-    applyNbr(row, col, row - 1, col + (row % 2 == 0 ? -1 : 1));
-    applyNbr(row, col, row + 1, col + (row % 2 == 0 ? -1 : 1));
+    applyNbr(board, row, col, row, col - 1);
+    applyNbr(board, row, col, row, col + 1);
+    applyNbr(board, row, col, row - 1, col);
+    applyNbr(board, row, col, row + 1, col);
+    applyNbr(board, row, col, row - 1, col + (row % 2 == 0 ? -1 : 1));
+    applyNbr(board, row, col, row + 1, col + (row % 2 == 0 ? -1 : 1));
 }
 
 size_t GameBoard::count() const {
@@ -95,63 +99,50 @@ bool GameBoard::pop(const size_t row, const size_t col, const size_t matches) {
 }
 
 void GameBoard::dropFloating() {
-    // NOTE: this DFS tries to reach the top row of the board on all cells
+    // NOTE: this DFS starts from just the 0th row, removes anything it cannot reach
     
-    std::unordered_set<size_t> visited;
-    std::vector<std::pair<size_t, size_t>> allFloatingFound;
+    // NOTE: uses the drop updated board as a visit tracker
+    std::vector<BubbleCell> dropped(board.size(), {0, 0});
+    std::vector<std::pair<size_t, size_t>> dfs;
 
-    for (size_t row = 0; row < rows; row++)
-        for (size_t col = 0; col < hexAlign(row); col++) {
+    for (size_t col = 0; col < hexAlign(0); col++)
+        if (board[at(0, col)] != 0)
+            dfs.push_back({0, col});
 
-            if (visited.find(at(row, col)) != visited.end() or board[at(row, col)] == 0)
-                continue;
+    while (!dfs.empty()) {
+        const std::pair<size_t, size_t> el = dfs.back();
+        dfs.pop_back();
 
-            std::vector<std::pair<size_t, size_t>> dfs, found;
+        if (oob(el.first, el.second) 
+            or board[at(el.first, el.second)] == 0 
+            or dropped[at(el.first, el.second)] != 0)
+            continue;
 
-            dfs.push_back({row, col});
-            while (!dfs.empty()) {
-                const std::pair<size_t, size_t> el = dfs.back();
-                dfs.pop_back();
+        dropped[at(el.first, el.second)].hue = board[at(el.first, el.second)].hue;
 
-                if (visited.find(at(el.first, el.second)) != visited.end() or board[at(el.first, el.second)] == 0)
-                    continue;
+        // TODO: we need a general reformat with a function that takes a function and applies these repeated parameters
+        applyNbr(dropped, el.first, el.second, el.first, el.second - 1);
+        applyNbr(dropped, el.first, el.second, el.first, el.second + 1);
+        applyNbr(dropped, el.first, el.second, el.first - 1, el.second);
+        applyNbr(dropped, el.first, el.second, el.first + 1, el.second);
+        applyNbr(dropped, el.first, el.second, el.first - 1, el.second + (el.first % 2 == 0 ? -1 : 1));
+        applyNbr(dropped, el.first, el.second, el.first + 1, el.second + (el.first % 2 == 0 ? -1 : 1));
 
-                if (el.first == 0) {
-                    found.clear();
-                    break;
-                }
+        dfs.push_back({ el.first, el.second - 1 });
+        dfs.push_back({ el.first, el.second + 1 });
+        dfs.push_back({ el.first - 1, el.second });
+        dfs.push_back({ el.first + 1, el.second });
+        dfs.push_back({ el.first - 1, el.second + (el.first % 2 == 0 ? -1 : 1) });
+        dfs.push_back({ el.first + 1, el.second + (el.first % 2 == 0 ? -1 : 1) });
+    }
 
-                found.push_back(el);
-                visited.insert(at(el.first, el.second));
-
-                dfs.push_back({ el.first, el.second - 1 });
-                dfs.push_back({ el.first, el.second + 1 });
-                dfs.push_back({ el.first - 1, el.second });
-                dfs.push_back({ el.first + 1, el.second });
-                dfs.push_back({ el.first - 1, el.second + (el.first % 2 == 0 ? -1 : 1) });
-                dfs.push_back({ el.first + 1, el.second + (el.first % 2 == 0 ? -1 : 1) });
-            }
-
-            allFloatingFound.insert(allFloatingFound.end(), found.begin(), found.end());
-        }
-
-    for (const std::pair<size_t, size_t>& el : allFloatingFound)
-        set(el.first, el.second, 0);
+    board = std::move(dropped);
 }
-
-/*
-bool GameBoard::slide(const size_t row, const size_t col) {
-
-    for (size_t r = row; r > 0; r--)
-        std::swap(board[at(r, col)], board[at(r - 1, col)]);
-
-}
-*/
 
 bool GameBoard::update(const size_t row, const size_t col, const size_t hue, const size_t matches) {
     if (attach(row, col, hue)) {
-        pop(row, col, matches);
-        dropFloating();
+        if (pop(row, col, matches))
+            dropFloating();
         return true;
     }
 
@@ -172,12 +163,12 @@ size_t GameBoard::at(const size_t row, const size_t col) const {
     return hexGridSize(row) + col;
 }
 
-void GameBoard::applyNbr(const size_t srcRow, const size_t srcCol, const size_t dstRow, const size_t dstCol) {
+void GameBoard::applyNbr(std::vector<BubbleCell>& b, const size_t srcRow, const size_t srcCol, const size_t dstRow, const size_t dstCol) {
     // TODO: Do not run multiple times on the same hue
     if (oob(dstRow, dstCol) or oob(srcRow, srcCol))
         return;
 
-    board[at(dstRow, dstCol)].neighbors += board[at(srcRow, srcCol)] == 0 ? -1 : 1;
+    b[at(dstRow, dstCol)].neighbors += b[at(srcRow, srcCol)] == 0 ? -1 : 1;
 }
 
 bool GameBoard::compare(const size_t row, const size_t col, const int rowOffset, const int colOffset) const {

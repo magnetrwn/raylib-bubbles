@@ -36,10 +36,11 @@ public:
     size_t hexGridSize(const size_t nRows) const;
 
     size_t get(const size_t row, const size_t col) const;
+    size_t getNbrs(const size_t row, const size_t col) const;
     void set(const size_t row, const size_t col, const size_t hue);
 
     size_t count() const;
-    
+
     bool oob(const size_t row, const size_t col) const;
 
     // NOTE: both of these return true on success
@@ -62,7 +63,7 @@ protected:
     std::vector<BubbleCell> board;
 
     inline size_t at(const size_t row, const size_t col) const;
-    inline void applyNbr(const size_t srcRow, const size_t srcCol, const size_t dstRow, const size_t dstCol);
+    inline void applyNbr(std::vector<BubbleCell>& b, const size_t srcRow, const size_t srcCol, const size_t dstRow, const size_t dstCol);
 
     bool compare(const size_t row, const size_t col, const int rowOffset, const int colOffset) const;
 };

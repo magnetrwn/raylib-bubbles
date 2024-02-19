@@ -89,6 +89,8 @@ void GameWindow::drawBoard() {
 
             if (hue != 0)
                 drawBubble(GameUtils::rowColToX(row, col, radius), GameUtils::rowToY(row, radius), hue);
+
+            drawText(std::to_string(board.getNbrs(row, col)), GameUtils::rowColToX(row, col, radius), GameUtils::rowToY(row, radius), 0.5f, LIGHTGRAY);
         }
 }
 

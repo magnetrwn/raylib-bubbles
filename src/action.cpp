@@ -2,6 +2,8 @@
 
 /* --- public --- */
 
+// TODO: move magic numbers to constants, then to config file
+
 void GameActionMgr::ActionType::step() {
     if (effect == Effect::LAUNCH) {
         if (bubbleData.size() != 1)
@@ -10,12 +12,12 @@ void GameActionMgr::ActionType::step() {
         bubbleData[0].x += bubbleData[0].xVel;
         bubbleData[0].y += bubbleData[0].yVel;
 
-        if (GameUtils::clamp(bubbleData[0].x, 0, parent.width - 2 * parent.radius))
+        if (GameUtils::clamp(bubbleData[0].x, 0.0f, parent.width - 2 * parent.radius))
             bubbleData[0].xVel *= -1;
-        if (GameUtils::clamp(bubbleData[0].y, 0, parent.height + 20.0f))
+        if (GameUtils::clamp(bubbleData[0].y, 0.0f, parent.height + 2 * parent.radius))
             bubbleData[0].yVel *= -1;
 
-        const size_t row = GameUtils::yToRow(bubbleData[0].y, parent.radius);
+        const size_t row = GameUtils::yToRow(bubbleData[0].y + parent.radius, parent.radius);
         const size_t col = GameUtils::xyToCol(bubbleData[0].x + parent.radius, bubbleData[0].y, parent.radius);
 
         if (!parent.board.oob(row, col) and !GameUtils::usedLast(row, col))
