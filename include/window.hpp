@@ -2,6 +2,7 @@
 #define WINDOW_HPP_
 
 #include <string>
+#include <cmath>
 
 #include "action.hpp"
 #include "board.hpp"
@@ -40,7 +41,7 @@ protected:
         "res/sprites/bubble_6.png"
     };
 
-    // TODO: big values stop accurate collision detection, need to investigate
+    // TODO: big values stop accurate collision detection, need to investigate (also happens when too fast?)
     static constexpr size_t DEFAULT_ROWS = 84;
     static constexpr size_t DEFAULT_COLS = 60;
 
@@ -56,8 +57,6 @@ protected:
     GameActionMgr actions;
 
     float limitLineY;
-
-    inline void drawDebugOverlay();
 };
 
 #endif

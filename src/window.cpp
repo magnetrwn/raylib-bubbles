@@ -56,13 +56,15 @@ void GameWindow::run() {
             /* --- end of debug shooter --- */
 
             /* --- debug performance test --- */
-            if (GetTime() - lastTime >= 0.002f) {
-                //TraceLog(LOG_INFO, std::to_string(GetTime() - lastTime).c_str());
+            if (GetTime() - lastTime > 0.05f and actions.size() <= 1000) {
+                const float direction = static_cast<float>(GetRandomValue(0, RAND_MAX) / static_cast<float>(RAND_MAX)) * 3.14f - 1.57f;
+                const float speed = 7.0f;
+
                 actions.enqueue({GameActionMgr::ActionType::Effect::LAUNCH, {
                 {
-                        static_cast<float>(GetRandomValue(radius, width - radius)), height - 2 * radius, 
-                        static_cast<float>(GetRandomValue(0, RAND_MAX) / static_cast<float>(RAND_MAX) * 4.0f - 2.0f) * 5.0f, 
-                        -10.0f,
+                        width / 2 - radius, height - 2 * radius, 
+                        std::sin(direction) * speed, 
+                        std::cos(direction) * -speed,
                         static_cast<size_t>(GetRandomValue(1, BUBBLE_TEX_COUNT))
                     }
                 }, actions});
