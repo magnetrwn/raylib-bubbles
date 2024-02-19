@@ -40,8 +40,9 @@ protected:
         "res/sprites/bubble_6.png"
     };
 
-    static constexpr size_t DEFAULT_ROWS = 14;
-    static constexpr size_t DEFAULT_COLS = 10;
+    // TODO: big values stop accurate collision detection, need to investigate
+    static constexpr size_t DEFAULT_ROWS = 84;
+    static constexpr size_t DEFAULT_COLS = 60;
 
     float width;
     float height;

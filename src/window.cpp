@@ -29,7 +29,8 @@ GameWindow::~GameWindow() {
 /* --- public --- */
 
 void GameWindow::run() {
-    size_t hueSelected = 1;
+    // size_t hueSelected = 1;
+    double lastTime = GetTime();
 
     while (!WindowShouldClose()) {
         BeginDrawing();
@@ -38,23 +39,36 @@ void GameWindow::run() {
             drawBoard();
 
             /* --- debug shooter --- */
+            // drawBubble(width / 2 - radius, height - 2 * radius, hueSelected);
 
-            drawBubble(width / 2 - radius, height - 2 * radius, hueSelected);
+            // if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
+            //     hueSelected = 1 + hueSelected % BUBBLE_TEX_COUNT;
 
-            if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
-                hueSelected = 1 + hueSelected % BUBBLE_TEX_COUNT;
+            // if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+            //     actions.enqueue({GameActionMgr::ActionType::Effect::LAUNCH, {
+            //     {
+            //             width / 2 - radius, height - 2 * radius, 
+            //             (GetMousePosition().x - width / 2) / 30.0f,
+            //             (GetMousePosition().y - height) / 30.0f,
+            //             static_cast<size_t>(hueSelected)
+            //         }
+            //     }, actions});
+            /* --- end of debug shooter --- */
 
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+            /* --- debug performance test --- */
+            if (GetTime() - lastTime >= 0.002f) {
+                //TraceLog(LOG_INFO, std::to_string(GetTime() - lastTime).c_str());
                 actions.enqueue({GameActionMgr::ActionType::Effect::LAUNCH, {
                 {
-                        width / 2 - radius, height - 2 * radius, 
-                        (GetMousePosition().x - width / 2) / 30.0f,
-                        (GetMousePosition().y - height) / 30.0f,
-                        static_cast<size_t>(hueSelected)
+                        static_cast<float>(GetRandomValue(radius, width - radius)), height - 2 * radius, 
+                        static_cast<float>(GetRandomValue(0, RAND_MAX) / static_cast<float>(RAND_MAX) * 4.0f - 2.0f) * 5.0f, 
+                        -10.0f,
+                        static_cast<size_t>(GetRandomValue(1, BUBBLE_TEX_COUNT))
                     }
                 }, actions});
-
-            /* --- end of debug shooter --- */
+                lastTime = GetTime();
+            }
+            /* --- end of debug performance test --- */
             
             drawActions();
             actions.stepAndPrune();
@@ -90,7 +104,7 @@ void GameWindow::drawBoard() {
             if (hue != 0)
                 drawBubble(GameUtils::rowColToX(row, col, radius), GameUtils::rowToY(row, radius), hue);
 
-            drawText(std::to_string(board.getNbrs(row, col)), GameUtils::rowColToX(row, col, radius), GameUtils::rowToY(row, radius), 0.5f, LIGHTGRAY);
+            // drawText(std::to_string(board.getNbrs(row, col)), GameUtils::rowColToX(row, col, radius), GameUtils::rowToY(row, radius), 0.5f, LIGHTGRAY);
         }
 }
 
