@@ -41,9 +41,9 @@ protected:
         "res/sprites/bubble_6.png"
     };
 
-    // TODO: big values stop accurate collision detection, need to investigate (also happens when too fast?)
-    static constexpr size_t DEFAULT_ROWS = 84;
-    static constexpr size_t DEFAULT_COLS = 60;
+    // TODO: big values stop accurate collision detection, because action speed can be faster than the cell size
+    static constexpr size_t DEFAULT_ROWS = 14;//84;
+    static constexpr size_t DEFAULT_COLS = 10;//60;
 
     float width;
     float height;

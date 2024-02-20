@@ -30,7 +30,7 @@ For instructions on how to play, see the [instructions file](build/INSTRUCTIONS.
 
 To summarize the structure of the project, here is a short description of each header file, pretty much top to bottom:
 
-+ `include/window.hpp`: Manages the window and contains the Raylib game loop.
++ `include/window.hpp`: Manages the window and contains the Raylib game loop. **This is the only header that interacts with Raylib, all others are independent and repurposable.**
 + `include/action.hpp`: Acts as a queue for animations to be applied consecutively, while keeping track of their state.
 + `include/game.hpp`: **TODO**
 + `include/board.hpp`: Provides a way to build an hexagonal grid of bubbles and to manipulate it through a straightforward API.
@@ -46,6 +46,8 @@ The `build` folder contains all files to bundle with the compiled executable. Af
 + `INSTRUCTIONS.md`: A file containing instructions on how to play the game.
 
 As mentioned earlier, there will also be a zipped build generated in the root project directory, with the name `bubbles_build[timestamp].zip`. It contains all necessary files to run the game.
+
+**Note:** The build resources such as fonts and textures may fall under a different license, please check the related folders for license information.
 
 ## Technical Summary
 

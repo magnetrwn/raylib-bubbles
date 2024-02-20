@@ -56,7 +56,7 @@ void GameWindow::run() {
             /* --- end of debug shooter --- */
 
             /* --- debug performance test --- */
-            if (GetTime() - lastTime > 0.05f and actions.size() <= 1000) {
+            if (GetTime() - lastTime > 0.5f and actions.size() < 3) {
                 const float direction = static_cast<float>(GetRandomValue(0, RAND_MAX) / static_cast<float>(RAND_MAX)) * 3.14f - 1.57f;
                 const float speed = 7.0f;
 

@@ -49,7 +49,9 @@ public:
 
     void dropFloating();
 
-    // NOTE: attach + pop, return attach
+    bool reachedBottom(const size_t row, const size_t col) const;
+
+    // NOTE: attach + pop + dropFloating, return attach
     bool update(const size_t row, const size_t col, const size_t hue, const size_t matches = MATCHES_TO_POP);
 
     void clear();
