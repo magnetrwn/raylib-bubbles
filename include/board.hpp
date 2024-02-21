@@ -65,10 +65,8 @@ protected:
 
     std::vector<BubbleCell> board;
 
-    inline size_t at(const size_t row, const size_t col) const;
-    inline void applyNbr(std::vector<BubbleCell>& b, const size_t srcRow, const size_t srcCol, const size_t dstRow, const size_t dstCol);
-
-    bool compare(const size_t row, const size_t col, const int rowOffset, const int colOffset) const;
+    size_t at(const size_t row, const size_t col) const;
+    void applyNbr(std::vector<BubbleCell>& b, const size_t srcRow, const size_t srcCol, const size_t dstRow, const size_t dstCol);
 };
 
 #endif

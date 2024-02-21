@@ -182,7 +182,3 @@ void GameBoard::applyNbr(std::vector<BubbleCell>& b, const size_t srcRow, const 
 
     b[at(dstRow, dstCol)].neighbors += b[at(srcRow, srcCol)] == 0 ? -1 : 1;
 }
-
-bool GameBoard::compare(const size_t row, const size_t col, const int rowOffset, const int colOffset) const {
-    return board[at(row, col)] == board[at(row + rowOffset, col + colOffset)];
-}
