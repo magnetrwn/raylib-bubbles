@@ -1,5 +1,4 @@
 #include "window.hpp"
-#include <string>
 
 constexpr const char* GameWindow::BUBBLE_TEX_PATHS[BUBBLE_TEX_COUNT];
 
@@ -13,6 +12,7 @@ GameWindow::GameWindow(const float width, const float height, const size_t rows,
 
     InitWindow(width, height, title);
     SetTargetFPS(fps);
+    SetConfigFlags(FLAG_VSYNC_HINT);
 
     font = LoadFontEx(FONT_PATH, FONT_SIZE, nullptr, 0);
     for (size_t i = 0; i < BUBBLE_TEX_COUNT; i++)

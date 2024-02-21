@@ -32,12 +32,12 @@ public:
         bool pruneFlag;
 
         // NOTE: for sameAsLastRowCol()
-        bool noLastRowCol;
+        bool hasLast;
         size_t lastRow;
         size_t lastCol;
 
         ActionType(const Effect effect, const std::vector<BubbleData>& bubbleData, const GameActionMgr& mgr)
-            : effect(effect), parent(mgr), bubbleData(bubbleData), pruneFlag(false), noLastRowCol(true) {};
+            : effect(effect), parent(mgr), bubbleData(bubbleData), pruneFlag(false), hasLast(false) {};
 
         void step();
 

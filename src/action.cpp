@@ -32,11 +32,10 @@ bool GameActionMgr::ActionType::shouldPrune() const {
 }
 
 bool GameActionMgr::ActionType::sameAsLastRowCol(const size_t row, const size_t col) {
-    if (noLastRowCol and lastRow == row and lastCol == col) {
-        noLastRowCol = false;
+    if (hasLast and lastRow == row and lastCol == col)
         return true;
-    }
 
+    hasLast = true;
     lastRow = row;
     lastCol = col;
 
