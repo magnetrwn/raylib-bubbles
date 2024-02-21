@@ -4,11 +4,11 @@
 #include <string>
 #include <cmath>
 
+#include <raylib.h>
+
 #include "action.hpp"
 #include "board.hpp"
 #include "util.hpp"
-
-#include <raylib.h>
 
 class GameWindow {
 public:

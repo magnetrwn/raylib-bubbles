@@ -1,4 +1,5 @@
 #include "window.hpp"
+#include <raylib.h>
 
 constexpr const char* GameWindow::BUBBLE_TEX_PATHS[BUBBLE_TEX_COUNT];
 
@@ -14,10 +15,12 @@ GameWindow::GameWindow(const float width, const float height, const size_t rows,
     SetConfigFlags(FLAG_VSYNC_HINT);
 
     InitWindow(width, height, title);
+
+    TraceLog(LOG_INFO, ("Executable path: " + GameUtils::getExecutablePath()).c_str());
     
-    font = LoadFontEx(FONT_PATH, FONT_SIZE, nullptr, 0);
+    font = LoadFontEx((GameUtils::getExecutablePath() + FONT_PATH).c_str(), FONT_SIZE, nullptr, 0);
     for (size_t i = 0; i < BUBBLE_TEX_COUNT; i++)
-        bubbleTexs[i] = LoadTexture(BUBBLE_TEX_PATHS[i]);
+        bubbleTexs[i] = LoadTexture((GameUtils::getExecutablePath() + BUBBLE_TEX_PATHS[i]).c_str());
 }
 
 GameWindow::~GameWindow() {

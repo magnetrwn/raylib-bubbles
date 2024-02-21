@@ -1,4 +1,21 @@
 #include "util.hpp"
+#include <string>
+
+std::string GameUtils::getExecutablePath() {
+    // NOTE: linux only, here is a comment from unistd.h on readlink():
+    // "Read the contents of the symbolic link PATH into no more than LEN bytes of BUF. The contents are not null-terminated.
+    //  Returns the number of characters read, or -1 for errors."
+
+    char buffer[PATH_BUFFER_SIZE];
+    ssize_t pathLength = readlink("/proc/self/exe", buffer, PATH_BUFFER_SIZE - 1);
+
+    if (pathLength == -1)
+        throw std::runtime_error("Error with GameUtils::getExecutablePath().");
+
+    std::string path(buffer, pathLength);
+
+    return path.substr(0, path.rfind('/') + 1);
+}
 
 bool GameUtils::clamp(float& value, const float lowLimit, const float highLimit) {
     if (value < lowLimit) {
