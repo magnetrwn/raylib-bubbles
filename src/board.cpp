@@ -50,8 +50,12 @@ bool GameBoard::oob(const size_t row, const size_t col) const {
     return row >= rows or col >= hexAlign(row);
 }
 
+bool GameBoard::canAttach(const size_t row, const size_t col) const {
+    return board[at(row, col)] == 0 and (board[at(row, col)].neighbors != 0 or row == 0);
+}
+
 bool GameBoard::attach(const size_t row, const size_t col, const size_t hue) {
-    if (board[at(row, col)] == 0 and (board[at(row, col)].neighbors != 0 or row == 0)) {
+    if (canAttach(row, col)) {
         set(row, col, hue);
         return true;
     }
@@ -137,6 +141,14 @@ void GameBoard::dropFloating() {
     }
 
     board = std::move(dropped);
+}
+
+bool GameBoard::reachedBottom() const {
+    for (size_t col = 0; col < hexAlign(rows - 1); col++)
+        if (board[at(rows - 1, col)] != 0)
+            return true;
+
+    return false;
 }
 
 bool GameBoard::update(const size_t row, const size_t col, const size_t hue, const size_t matches) {

@@ -29,8 +29,13 @@ GameWindow::~GameWindow() {
 /* --- public --- */
 
 void GameWindow::run() {
-    // size_t hueSelected = 1;
+    #ifdef DEBUG_MOUSESHOOTER
+    size_t hueSelected = 1;
+    #endif
+
+    #ifdef DEBUG_SPRINKLER
     double lastTime = GetTime();
+    #endif
 
     while (!WindowShouldClose()) {
         BeginDrawing();
@@ -38,28 +43,26 @@ void GameWindow::run() {
             
             drawBoard();
 
-            /* --- debug shooter --- */
-            // drawBubble(width / 2 - radius, height - 2 * radius, hueSelected);
+            #ifdef DEBUG_MOUSESHOOTER
+            drawBubble(width / 2 - radius, height - 2 * radius, hueSelected);
+            if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
+                hueSelected = 1 + hueSelected % BUBBLE_TEX_COUNT;
+            
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+                actions.enqueue({GameActionMgr::ActionType::Effect::LAUNCH, {
+                {
+                        width / 2 - radius, height - 2 * radius, 
+                        (GetMousePosition().x - width / 2) / 30.0f,
+                        (GetMousePosition().y - height) / 30.0f,
+                        static_cast<size_t>(hueSelected)
+                    }
+                }, actions});
+            #endif
 
-            // if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
-            //     hueSelected = 1 + hueSelected % BUBBLE_TEX_COUNT;
-
-            // if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-            //     actions.enqueue({GameActionMgr::ActionType::Effect::LAUNCH, {
-            //     {
-            //             width / 2 - radius, height - 2 * radius, 
-            //             (GetMousePosition().x - width / 2) / 30.0f,
-            //             (GetMousePosition().y - height) / 30.0f,
-            //             static_cast<size_t>(hueSelected)
-            //         }
-            //     }, actions});
-            /* --- end of debug shooter --- */
-
-            /* --- debug performance test --- */
-            if (GetTime() - lastTime > 0.5f and actions.size() < 3) {
-                const float direction = static_cast<float>(GetRandomValue(0, RAND_MAX) / static_cast<float>(RAND_MAX)) * 3.14f - 1.57f;
-                const float speed = 7.0f;
-
+            #ifdef DEBUG_SPRINKLER
+            if (GetTime() - lastTime > 0.375f and actions.size() < 5) {
+                const float direction = static_cast<float>(GetRandomValue(0, RAND_MAX) / static_cast<float>(RAND_MAX)) * 1.57f - 0.79f;
+                const float speed = 8.0f;
                 actions.enqueue({GameActionMgr::ActionType::Effect::LAUNCH, {
                 {
                         width / 2 - radius, height - 2 * radius, 
@@ -70,13 +73,13 @@ void GameWindow::run() {
                 }, actions});
                 lastTime = GetTime();
             }
-            /* --- end of debug performance test --- */
+            #endif
+
+            if (board.reachedBottom())
+                board.clear();
             
             drawActions();
             actions.stepAndPrune();
-
-            drawText(std::to_string(actions.size()), 15.0f, height - 55.0f, 1.0f, GOLD);
-            drawText(std::to_string(board.count()), 115.0f, height - 55.0f, 1.0f, LIGHTGRAY);
 
         EndDrawing();
     }

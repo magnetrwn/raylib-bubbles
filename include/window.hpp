@@ -42,13 +42,13 @@ protected:
     };
 
     // TODO: big values stop accurate collision detection, because action speed can be faster than the cell size
-    static constexpr size_t DEFAULT_ROWS = 14;//84;
-    static constexpr size_t DEFAULT_COLS = 10;//60;
+    static constexpr size_t DEFAULT_ROWS = 14;
+    static constexpr size_t DEFAULT_COLS = 10;
 
-    float width;
-    float height;
-    size_t fps;
-    float radius;
+    const float width;
+    const float height;
+    const size_t fps;
+    const float radius;
 
     Font font;
     Texture2D bubbleTexs[BUBBLE_TEX_COUNT];
@@ -56,7 +56,7 @@ protected:
     GameBoard board;
     GameActionMgr actions;
 
-    float limitLineY;
+    const float limitLineY;
 };
 
 #endif

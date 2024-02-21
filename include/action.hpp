@@ -46,9 +46,9 @@ public:
     std::vector<BubbleData> getAllStepData() const;
 
 protected:
-    float width;
-    float height;
-    float radius;
+    const float width;
+    const float height;
+    const float radius;
     GameBoard& board;
     
     // NOTE: moved to list because of remove_if copy/move assignment issues with vector, try profiling

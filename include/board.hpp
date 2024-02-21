@@ -42,6 +42,7 @@ public:
     size_t count() const;
 
     bool oob(const size_t row, const size_t col) const;
+    bool canAttach(const size_t row, const size_t col) const;
 
     // NOTE: both of these return true on success
     bool attach(const size_t row, const size_t col, const size_t hue);
@@ -49,7 +50,7 @@ public:
 
     void dropFloating();
 
-    bool reachedBottom(const size_t row, const size_t col) const;
+    bool reachedBottom() const;
 
     // NOTE: attach + pop + dropFloating, return attach
     bool update(const size_t row, const size_t col, const size_t hue, const size_t matches = MATCHES_TO_POP);
@@ -59,8 +60,8 @@ public:
 protected: 
     static constexpr size_t MATCHES_TO_POP = 3;
 
-    size_t rows;
-    size_t cols;
+    const size_t rows;
+    const size_t cols;
 
     std::vector<BubbleCell> board;
 
