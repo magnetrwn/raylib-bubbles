@@ -32,11 +32,11 @@ bool GameActionMgr::ActionType::shouldPrune() const {
 }
 
 size_t GameActionMgr::size() const {
-    return actions.size();
+    return std::distance(actions.begin(), actions.end());
 }
 
 void GameActionMgr::enqueue(const ActionType action) {
-    actions.push_back(action);
+    actions.push_front(action);
 }
 
 void GameActionMgr::stepAndPrune() {

@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <algorithm>
-#include <list>
+#include <forward_list>
 #include <stdexcept>
 
 #include "board.hpp"
@@ -51,8 +51,8 @@ protected:
     const float radius;
     GameBoard& board;
     
-    // NOTE: moved to list because of remove_if copy/move assignment issues with vector, try profiling
-    std::list<ActionType> actions;
+    // NOTE: moved to forward_list because of remove_if copy/move assignment issues with vector, try profiling
+    std::forward_list<ActionType> actions;
 };
 
 #endif
