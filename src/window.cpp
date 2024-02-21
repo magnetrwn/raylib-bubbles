@@ -1,4 +1,5 @@
 #include "window.hpp"
+#include <string>
 
 constexpr const char* GameWindow::BUBBLE_TEX_PATHS[BUBBLE_TEX_COUNT];
 
@@ -80,6 +81,7 @@ void GameWindow::run() {
             drawActions();
             actions.stepAndPrune();
 
+            drawText(std::to_string(GetFPS()), 15.0f, 8.0f, 1.0f, LIME);
             drawText(std::to_string(actions.size()), 15.0f, height - 55.0f, 1.0f, GOLD);
             drawText(std::to_string(board.count()), 115.0f, height - 55.0f, 1.0f, LIGHTGRAY);
 

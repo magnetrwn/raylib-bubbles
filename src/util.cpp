@@ -14,22 +14,6 @@ bool GameUtils::clamp(float& value, const float lowLimit, const float highLimit)
     return false;
 }
 
-bool GameUtils::usedLast(const size_t row, const size_t col) {
-    static size_t lastRow;
-    static size_t lastCol;
-    static bool first = true;
-
-    if (!first and lastRow == row and lastCol == col) {
-        first = false;
-        return true;
-    }
-
-    lastRow = row;
-    lastCol = col;
-
-    return false;
-}
-
 // TODO: all these could be constexpr if radius were constexpr!
 
 int GameUtils::xyToCol(const float x, const float y, const float radius) {

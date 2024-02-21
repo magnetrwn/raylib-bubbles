@@ -26,17 +26,27 @@ public:
 
         const Effect effect;
         const GameActionMgr& parent;
-        std::vector<BubbleData> bubbleData;
-        bool pruneFlag = false;
 
-        ActionType(const Effect effect, const std::vector<BubbleData>& bubbleData, const GameActionMgr& mgr) : effect(effect), parent(mgr), bubbleData(bubbleData) {};
+        std::vector<BubbleData> bubbleData;
+
+        bool pruneFlag;
+
+        // NOTE: for sameAsLastRowCol()
+        bool noLastRowCol;
+        size_t lastRow;
+        size_t lastCol;
+
+        ActionType(const Effect effect, const std::vector<BubbleData>& bubbleData, const GameActionMgr& mgr)
+            : effect(effect), parent(mgr), bubbleData(bubbleData), pruneFlag(false), noLastRowCol(true) {};
 
         void step();
 
         bool shouldPrune() const;
+        bool sameAsLastRowCol(const size_t row, const size_t col);
     };
 
-    GameActionMgr(const float width, const float height, const float radius, GameBoard& board) : width(width), height(height), radius(radius), board(board) {};
+    GameActionMgr(const float width, const float height, const float radius, GameBoard& board)
+        : width(width), height(height), radius(radius), board(board) {};
 
     size_t size() const;
 

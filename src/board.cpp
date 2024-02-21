@@ -10,14 +10,6 @@ size_t GameBoard::getCols() const {
     return cols;
 }
 
-size_t GameBoard::hexAlign(const size_t row) const {
-    return row % 2 == 0 ? cols : cols - (cols % 2 == 0 ? 1 : 0);
-}
-
-size_t GameBoard::hexGridSize(const size_t nRows) const {
-    return (nRows * hexAlign(0) + nRows * hexAlign(1) + 1) / 2;
-}
-
 size_t GameBoard::get(const size_t row, const size_t col) const {
     return board[at(row, col)].hue;
 }
@@ -32,12 +24,7 @@ void GameBoard::set(const size_t row, const size_t col, const size_t hue) {
 
     board[at(row, col)] = hue;
 
-    applyNbr(board, row, col, row, col - 1);
-    applyNbr(board, row, col, row, col + 1);
-    applyNbr(board, row, col, row - 1, col);
-    applyNbr(board, row, col, row + 1, col);
-    applyNbr(board, row, col, row - 1, col + (row % 2 == 0 ? -1 : 1));
-    applyNbr(board, row, col, row + 1, col + (row % 2 == 0 ? -1 : 1));
+    applyNbrs(board, row, col);
 }
 
 size_t GameBoard::count() const {
@@ -83,12 +70,8 @@ bool GameBoard::pop(const size_t row, const size_t col, const size_t matches) {
 
         found.push_back(el);
 
-        dfs.push_back({ el.first, el.second - 1 });
-        dfs.push_back({ el.first, el.second + 1 });
-        dfs.push_back({ el.first - 1, el.second });
-        dfs.push_back({ el.first + 1, el.second });
-        dfs.push_back({ el.first - 1, el.second + (el.first % 2 == 0 ? -1 : 1) });
-        dfs.push_back({ el.first + 1, el.second + (el.first % 2 == 0 ? -1 : 1) });
+        for (const std::pair<int, int>& of : getOffsets(el.first))
+            dfs.push_back({ el.first + of.first, el.second + of.second });
 
         set(el.first, el.second, 0);
     }
@@ -109,7 +92,7 @@ void GameBoard::dropFloating() {
     std::vector<BubbleCell> dropped(board.size(), {0, 0});
     std::vector<std::pair<size_t, size_t>> dfs;
 
-    for (size_t col = 0; col < hexAlign(0); col++)
+    for (size_t col = 0; col < cols; col++)
         if (board[at(0, col)] != 0)
             dfs.push_back({0, col});
 
@@ -124,20 +107,10 @@ void GameBoard::dropFloating() {
 
         dropped[at(el.first, el.second)].hue = board[at(el.first, el.second)].hue;
 
-        // TODO: we need a general reformat with a function that takes a function and applies these repeated parameters
-        applyNbr(dropped, el.first, el.second, el.first, el.second - 1);
-        applyNbr(dropped, el.first, el.second, el.first, el.second + 1);
-        applyNbr(dropped, el.first, el.second, el.first - 1, el.second);
-        applyNbr(dropped, el.first, el.second, el.first + 1, el.second);
-        applyNbr(dropped, el.first, el.second, el.first - 1, el.second + (el.first % 2 == 0 ? -1 : 1));
-        applyNbr(dropped, el.first, el.second, el.first + 1, el.second + (el.first % 2 == 0 ? -1 : 1));
+        applyNbrs(dropped, el.first, el.second);
 
-        dfs.push_back({ el.first, el.second - 1 });
-        dfs.push_back({ el.first, el.second + 1 });
-        dfs.push_back({ el.first - 1, el.second });
-        dfs.push_back({ el.first + 1, el.second });
-        dfs.push_back({ el.first - 1, el.second + (el.first % 2 == 0 ? -1 : 1) });
-        dfs.push_back({ el.first + 1, el.second + (el.first % 2 == 0 ? -1 : 1) });
+        for (const std::pair<int, int>& of : getOffsets(el.first))
+            dfs.push_back({ el.first + of.first, el.second + of.second });
     }
 
     board = std::move(dropped);
@@ -168,6 +141,14 @@ void GameBoard::clear() {
 
 /* --- protected --- */
 
+size_t GameBoard::hexAlign(const size_t row) const {
+    return row % 2 == 0 ? cols : cols - (cols % 2 == 0 ? 1 : 0);
+}
+
+size_t GameBoard::hexGridSize(const size_t nRows) const {
+    return (nRows * cols + nRows * hexAlign(1) + 1) / 2;
+}
+
 size_t GameBoard::at(const size_t row, const size_t col) const {
     if (oob(row, col))
         throw std::out_of_range("Requested GameBoard::at(" + std::to_string(row) + ", " + std::to_string(col) + ") position is out of bounds.");
@@ -175,10 +156,20 @@ size_t GameBoard::at(const size_t row, const size_t col) const {
     return hexGridSize(row) + col;
 }
 
-void GameBoard::applyNbr(std::vector<BubbleCell>& b, const size_t srcRow, const size_t srcCol, const size_t dstRow, const size_t dstCol) {
+void GameBoard::applyNbrs(std::vector<BubbleCell>& b, const size_t row, const size_t col) {
     // TODO: Do not run multiple times on the same hue
-    if (oob(dstRow, dstCol) or oob(srcRow, srcCol))
-        return;
+    for (const std::pair<int, int>& of : getOffsets(row)) {
+        if (oob(row + of.first, col + of.second) or oob(row, col))
+            continue;
 
-    b[at(dstRow, dstCol)].neighbors += b[at(srcRow, srcCol)] == 0 ? -1 : 1;
+        b[at(row + of.first, col + of.second)].neighbors += b[at(row, col)] == 0 ? -1 : 1;
+    }
+}
+
+std::array<std::pair<int, int>, 6> GameBoard::getOffsets(const size_t row) const {
+    return {
+        std::pair<int, int>{0, -1}, std::pair<int, int>{0, 1}, 
+        std::pair<int, int>{-1, 0}, std::pair<int, int>{1, 0}, 
+        std::pair<int, int>{-1, (row % 2 == 0 ? -1 : 1)}, std::pair<int, int>{1, (row % 2 == 0 ? -1 : 1)}
+    };
 }

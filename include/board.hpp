@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <unordered_set>
+#include <array>
 #include <stdexcept>
 #include <algorithm>
 
@@ -13,7 +14,8 @@ public:
         size_t neighbors;
 
         // NOTE: Zero hue is empty space on the board, which is why the empty() method checks == 0.
-        BubbleCell(size_t hue = 0, size_t neighbors = 0) : hue(hue), neighbors(neighbors) {}
+        BubbleCell(size_t hue = 0, size_t neighbors = 0) 
+            : hue(hue), neighbors(neighbors) {}
 
         bool operator==(const BubbleCell& other) const {
             return hue == other.hue;
@@ -28,7 +30,8 @@ public:
         }
     };
     
-    GameBoard(const size_t rows, const size_t cols) : rows(rows), cols(cols), board(hexGridSize(rows)) {};
+    GameBoard(const size_t rows, const size_t cols) 
+        : rows(rows), cols(cols), board(hexGridSize(rows)) {};
 
     size_t getRows() const;
     size_t getCols() const;
@@ -66,7 +69,9 @@ protected:
     std::vector<BubbleCell> board;
 
     size_t at(const size_t row, const size_t col) const;
-    void applyNbr(std::vector<BubbleCell>& b, const size_t srcRow, const size_t srcCol, const size_t dstRow, const size_t dstCol);
+    void applyNbrs(std::vector<BubbleCell>& b, const size_t row, const size_t col);
+
+    std::array<std::pair<int, int>, 6> getOffsets(const size_t row) const;
 };
 
 #endif

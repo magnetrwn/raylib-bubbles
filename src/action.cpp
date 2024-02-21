@@ -20,7 +20,7 @@ void GameActionMgr::ActionType::step() {
         const size_t row = GameUtils::yToRow(bubbleData[0].y + parent.radius, parent.radius);
         const size_t col = GameUtils::xyToCol(bubbleData[0].x + parent.radius, bubbleData[0].y, parent.radius);
 
-        if (!parent.board.oob(row, col) and !GameUtils::usedLast(row, col))
+        if (!parent.board.oob(row, col) and !sameAsLastRowCol(row, col))
             pruneFlag = parent.board.update(row, col, bubbleData[0].hue);
     }
 }
@@ -29,6 +29,18 @@ bool GameActionMgr::ActionType::shouldPrune() const {
     return std::all_of(bubbleData.begin(), bubbleData.end(), [this] (const BubbleData& bubble) {
         return bubble.x > parent.width or bubble.y > parent.height or bubble.x < 0 or bubble.y < 0;
     }) or pruneFlag; // TODO: unclear, should clarify that either off screen coords or pruneFlag cause pruning
+}
+
+bool GameActionMgr::ActionType::sameAsLastRowCol(const size_t row, const size_t col) {
+    if (noLastRowCol and lastRow == row and lastCol == col) {
+        noLastRowCol = false;
+        return true;
+    }
+
+    lastRow = row;
+    lastCol = col;
+
+    return false;
 }
 
 size_t GameActionMgr::size() const {
