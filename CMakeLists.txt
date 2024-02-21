@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.12.0)
 project(bubbles)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=leak")
 
 find_package(raylib REQUIRED)
 
@@ -14,12 +13,8 @@ file(GLOB PROJECT_FILES
 add_compile_definitions(DEBUG_MOUSESHOOTER)
 #add_compile_definitions(DEBUG_SPRINKLER)
 
-if(MSVC)
-    add_compile_options(/w4)
-else()
-    add_compile_options(-Wall -Wextra -Wpedantic)
-endif()
-
+add_compile_options(-Wall -Wextra -Wpedantic)
+add_link_options(-fsanitize=leak)
 add_executable(${PROJECT_NAME} ${PROJECT_FILES})
 
 target_include_directories(
