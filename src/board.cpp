@@ -10,6 +10,14 @@ size_t GameBoard::getCols() const {
     return cols;
 }
 
+size_t GameBoard::getColAlign(const size_t row) const {
+    return row % 2 == 0 ? cols : cols - (cols % 2 == 0 ? 1 : 0);
+}
+
+size_t GameBoard::getGridSize(const size_t nRows) const {
+    return (nRows * cols + nRows * getColAlign(1) + 1) / 2;
+}
+
 size_t GameBoard::get(const size_t row, const size_t col) const {
     return board[at(row, col)].hue;
 }
@@ -34,7 +42,7 @@ size_t GameBoard::count() const {
 }
 
 bool GameBoard::oob(const size_t row, const size_t col) const {
-    return row >= rows or col >= hexAlign(row);
+    return row >= rows or col >= getColAlign(row);
 }
 
 bool GameBoard::canAttach(const size_t row, const size_t col) const {
@@ -117,7 +125,7 @@ void GameBoard::dropFloating() {
 }
 
 bool GameBoard::reachedBottom() const {
-    for (size_t col = 0; col < hexAlign(rows - 1); col++)
+    for (size_t col = 0; col < getColAlign(rows - 1); col++)
         if (board[at(rows - 1, col)] != 0)
             return true;
 
@@ -141,19 +149,11 @@ void GameBoard::clear() {
 
 /* --- protected --- */
 
-size_t GameBoard::hexAlign(const size_t row) const {
-    return row % 2 == 0 ? cols : cols - (cols % 2 == 0 ? 1 : 0);
-}
-
-size_t GameBoard::hexGridSize(const size_t nRows) const {
-    return (nRows * cols + nRows * hexAlign(1) + 1) / 2;
-}
-
 size_t GameBoard::at(const size_t row, const size_t col) const {
     if (oob(row, col))
         throw std::out_of_range("Requested GameBoard::at(" + std::to_string(row) + ", " + std::to_string(col) + ") position is out of bounds.");
 
-    return hexGridSize(row) + col;
+    return getGridSize(row) + col;
 }
 
 void GameBoard::applyNbrs(std::vector<BubbleCell>& b, const size_t row, const size_t col) {

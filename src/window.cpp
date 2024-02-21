@@ -107,7 +107,7 @@ void GameWindow::drawBoard() {
     DrawLine(0, limitLineY, width, limitLineY, RED);
 
     for (size_t row = 0; row < board.getRows(); row++)
-        for (size_t col = 0; col < board.hexAlign(row); col++) {
+        for (size_t col = 0; col < board.getColAlign(row); col++) {
             size_t hue = board.get(row, col);
 
             if (hue != 0)

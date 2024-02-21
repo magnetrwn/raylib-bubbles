@@ -31,12 +31,12 @@ public:
     };
     
     GameBoard(const size_t rows, const size_t cols) 
-        : rows(rows), cols(cols), board(hexGridSize(rows)) {};
+        : rows(rows), cols(cols), board(getGridSize(rows)) {};
 
     size_t getRows() const;
     size_t getCols() const;
-    size_t hexAlign(const size_t row) const;
-    size_t hexGridSize(const size_t nRows) const;
+    size_t getColAlign(const size_t row) const;
+    size_t getGridSize(const size_t nRows) const;
 
     size_t get(const size_t row, const size_t col) const;
     size_t getNbrs(const size_t row, const size_t col) const;
