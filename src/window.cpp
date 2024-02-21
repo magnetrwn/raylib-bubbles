@@ -10,10 +10,11 @@ GameWindow::GameWindow(const float width, const float height, const size_t rows,
       board(rows, cols), actions(width, height, radius, board),
       limitLineY(GameUtils::rowToY(board.getRows() - 1, radius)) {
 
-    InitWindow(width, height, title);
     SetTargetFPS(fps);
     SetConfigFlags(FLAG_VSYNC_HINT);
 
+    InitWindow(width, height, title);
+    
     font = LoadFontEx(FONT_PATH, FONT_SIZE, nullptr, 0);
     for (size_t i = 0; i < BUBBLE_TEX_COUNT; i++)
         bubbleTexs[i] = LoadTexture(BUBBLE_TEX_PATHS[i]);
