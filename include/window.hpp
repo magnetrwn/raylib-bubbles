@@ -2,6 +2,7 @@
 #define WINDOW_HPP_
 
 #include <string>
+#include <sstream>
 #include <cmath>
 
 #include <raylib.h>
@@ -12,7 +13,7 @@
 
 class GameWindow {
 public:
-    GameWindow(const float width = DEFAULT_WIDTH, const float height = DEFAULT_HEIGHT, const size_t rows = DEFAULT_ROWS, const size_t cols = DEFAULT_COLS, const char* title = DEFAULT_TITLE, size_t fps = DEFAULT_FPS);
+    GameWindow();
     ~GameWindow();
 
     void run();
@@ -23,40 +24,24 @@ public:
     void drawActions();
 
 protected:
-    static constexpr float DEFAULT_WIDTH = 600.0f;
-    static constexpr float DEFAULT_HEIGHT = 960.0f;
-    static constexpr const char* DEFAULT_TITLE = "Game Window";
-    static constexpr size_t DEFAULT_FPS = 60;
-
-    static constexpr const char* FONT_PATH = "res/fonts/ct_prolamina.ttf";
-    static constexpr size_t FONT_SIZE = 48;
-
-    static constexpr size_t BUBBLE_TEX_COUNT = 6;
-    static constexpr const char* BUBBLE_TEX_PATHS[BUBBLE_TEX_COUNT] = {
-        "res/sprites/bubble_1.png",
-        "res/sprites/bubble_2.png",
-        "res/sprites/bubble_3.png",
-        "res/sprites/bubble_4.png",
-        "res/sprites/bubble_5.png",
-        "res/sprites/bubble_6.png"
-    };
-
-    // TODO: big values stop accurate collision detection, because action speed can be faster than the cell size
-    static constexpr size_t DEFAULT_ROWS = 14;
-    static constexpr size_t DEFAULT_COLS = 10;
-
     const float width;
     const float height;
     const size_t fps;
     const float radius;
 
     Font font;
-    Texture2D bubbleTexs[BUBBLE_TEX_COUNT];
+    std::vector<Texture2D> bubbleTexs;
 
     GameBoard board;
     GameActionMgr actions;
 
     const float limitLineY;
+
+    void initWindow();
+    void loadFont();
+    void loadTextures();
+
+    float getFitToWidthR() const;
 };
 
 #endif

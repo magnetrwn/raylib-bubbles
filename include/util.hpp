@@ -3,16 +3,20 @@
 
 #include <cstddef>
 #include <string>
+#include <fstream>
 #include <stdexcept>
 
 #include <unistd.h>
 
-#include "board.hpp"
+#include <inipp.h>
 
 class GameUtils {
 public:
-    // TODO: preprocessor directive to pick this if the platform is linux
-    static std::string getExecutablePath();
+    // NOTE: file I/O tools
+    static std::string getAbsDir();
+    static std::string getCfgStr(const std::string& section, const std::string& key);
+    static size_t getCfgSizeT(const std::string& section, const std::string& key);
+    static float getCfgFloat(const std::string& section, const std::string& key);
 
     static bool clamp(float& value, const float lowLimit, const float highLimit);
 
@@ -21,9 +25,6 @@ public:
     static int yToRow(const float y, const float radius);
     static float rowColToX(const size_t row, const size_t col, const float radius);
     static float rowToY(const size_t row, const float radius);
-
-protected:
-    static constexpr size_t PATH_BUFFER_SIZE = 256;
 };
 
 #endif

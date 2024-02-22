@@ -1,31 +1,26 @@
 #include "window.hpp"
 
-constexpr const char* GameWindow::BUBBLE_TEX_PATHS[BUBBLE_TEX_COUNT];
-
 /* --- initialization --- */
 
-GameWindow::GameWindow(const float width, const float height, const size_t rows, const size_t cols, const char* title, const size_t fps) 
-    : width(width), height(height), fps(fps), 
-      radius(width / (static_cast<float>(cols) + (cols % 2 == 1 ? 0.5f : 0)) / 2.0f), // NOTE: radius to fit-to-width
-      board(rows, cols), actions(width, height, radius, board),
+GameWindow::GameWindow()
+    : width(GameUtils::getCfgFloat("Game.Window", "WIDTH")),
+      height(GameUtils::getCfgFloat("Game.Window", "HEIGHT")),
+      fps(GameUtils::getCfgFloat("Game.Window", "FPS")),
+      radius(getFitToWidthR()),
+      board(GameUtils::getCfgSizeT("Game.Window.Board", "ROWS"), 
+            GameUtils::getCfgSizeT("Game.Window.Board", "COLS")),
+      actions(width, height, radius, board),
       limitLineY(GameUtils::rowToY(board.getRows() - 1, radius)) {
 
-    SetTargetFPS(fps);
-    SetConfigFlags(FLAG_VSYNC_HINT);
-
-    InitWindow(width, height, title);
-
-    TraceLog(LOG_INFO, ("Executable path: " + GameUtils::getExecutablePath()).c_str());
-    
-    font = LoadFontEx((GameUtils::getExecutablePath() + FONT_PATH).c_str(), FONT_SIZE, nullptr, 0);
-    for (size_t i = 0; i < BUBBLE_TEX_COUNT; i++)
-        bubbleTexs[i] = LoadTexture((GameUtils::getExecutablePath() + BUBBLE_TEX_PATHS[i]).c_str());
+    initWindow();
+    loadFont();
+    loadTextures();
 }
 
 GameWindow::~GameWindow() {
     UnloadFont(font);
-    for (size_t i = 0; i < BUBBLE_TEX_COUNT; i++)
-        UnloadTexture(bubbleTexs[i]);
+    for (const Texture2D& tex : bubbleTexs)
+        UnloadTexture(tex);
     CloseWindow();
 }
 
@@ -49,7 +44,7 @@ void GameWindow::run() {
             #ifdef DEBUG_MOUSESHOOTER
             drawBubble(width / 2 - radius, height - 2 * radius, hueSelected);
             if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
-                hueSelected = 1 + hueSelected % BUBBLE_TEX_COUNT;
+                hueSelected = 1 + hueSelected % bubbleTexs.size();
             
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
                 actions.enqueue({GameActionMgr::ActionType::Effect::LAUNCH, {
@@ -71,7 +66,7 @@ void GameWindow::run() {
                         width / 2 - radius, height - 2 * radius, 
                         std::sin(direction) * speed, 
                         std::cos(direction) * -speed,
-                        static_cast<size_t>(GetRandomValue(1, BUBBLE_TEX_COUNT))
+                        static_cast<size_t>(GetRandomValue(1, bubbleTexs.size()))
                     }
                 }, actions});
                 lastTime = GetTime();
@@ -100,8 +95,8 @@ void GameWindow::drawBubble(const float x, const float y, const size_t hue) {
     if (hue == 0)
         return;
 
-    if (hue > BUBBLE_TEX_COUNT)
-        throw std::invalid_argument("Requested GameWindow::drawBubble() hue (texture index) is not between 0 and " + std::to_string(BUBBLE_TEX_COUNT) + ".");
+    if (hue > bubbleTexs.size())
+        throw std::invalid_argument("Requested GameWindow::drawBubble() hue (texture index) is not between 0 and " + std::to_string(bubbleTexs.size()) + ".");
 
     DrawTextureEx(bubbleTexs[hue - 1], { x, y }, 0.0f, 2 * radius / bubbleTexs[0].width, WHITE);
 }
@@ -123,4 +118,33 @@ void GameWindow::drawBoard() {
 void GameWindow::drawActions() {
     for (const GameActionMgr::BubbleData& bubble : actions.getAllStepData())
         drawBubble(bubble.x, bubble.y, bubble.hue);
+}
+
+/* --- protected --- */
+
+void GameWindow::initWindow() {
+    SetTargetFPS(fps);
+    SetConfigFlags(FLAG_VSYNC_HINT);
+    InitWindow(width, height, GameUtils::getCfgStr("Game.Window", "TITLE").c_str());
+    TraceLog(LOG_INFO, ("Executable directory: " + GameUtils::getAbsDir()).c_str());
+}
+
+void GameWindow::loadFont() {
+    font = LoadFontEx((GameUtils::getAbsDir() + GameUtils::getCfgStr("Game.Window.Font", "PATH")).c_str(), 
+                      GameUtils::getCfgSizeT("Game.Window.Font", "SIZE"), nullptr, 0);
+}
+
+void GameWindow::loadTextures() {
+    std::istringstream bubbleTexPaths(GameUtils::getCfgStr("Game.Window.Bubble", "TEX_PATHS"));
+    std::string path;
+    while (std::getline(bubbleTexPaths, path, ':')) {
+        bubbleTexs.push_back(LoadTexture((GameUtils::getAbsDir() + path).c_str()));
+    }
+}
+
+float GameWindow::getFitToWidthR() const {
+    // NOTE: this calculates the radius to give the board a fit-to-width appearance;
+    //       keep in mind that bubble coords for textures on the board are distanced by 2 * radius to each other!
+    const size_t cols = GameUtils::getCfgSizeT("Game.Window.Board", "COLS");
+    return width / (static_cast<float>(cols) + (cols % 2 == 1 ? 0.5f : 0)) / 2.0f;
 }

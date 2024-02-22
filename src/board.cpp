@@ -84,7 +84,7 @@ bool GameBoard::pop(const size_t row, const size_t col, const size_t matches) {
         set(el.first, el.second, 0);
     }
 
-    if (found.size() >= matches)
+    if (found.size() >= (matches == 0 ? matchesToPop : matches))
         return true;
     
     for (const std::pair<size_t, size_t>& el : found)

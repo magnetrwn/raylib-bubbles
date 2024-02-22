@@ -7,6 +7,8 @@
 #include <stdexcept>
 #include <algorithm>
 
+#include "util.hpp"
+
 class GameBoard {
 public:
     struct BubbleCell {
@@ -31,7 +33,7 @@ public:
     };
     
     GameBoard(const size_t rows, const size_t cols) 
-        : rows(rows), cols(cols), board(getGridSize(rows)) {};
+        : rows(rows), cols(cols), matchesToPop(GameUtils::getCfgSizeT("Game.Board", "MATCHES_TO_POP")), board(getGridSize(rows)) {};
 
     size_t getRows() const;
     size_t getCols() const;
@@ -49,22 +51,23 @@ public:
 
     // NOTE: both of these return true on success
     bool attach(const size_t row, const size_t col, const size_t hue);
-    bool pop(const size_t row, const size_t col, const size_t matches = MATCHES_TO_POP);
+    bool pop(const size_t row, const size_t col, const size_t matches = 0);
 
     void dropFloating();
 
     bool reachedBottom() const;
 
     // NOTE: attach + pop + dropFloating, return attach
-    bool update(const size_t row, const size_t col, const size_t hue, const size_t matches = MATCHES_TO_POP);
+    bool update(const size_t row, const size_t col, const size_t hue, const size_t matches = 0);
 
     void clear();
 
-protected: 
-    static constexpr size_t MATCHES_TO_POP = 3;
-
+protected:
     const size_t rows;
     const size_t cols;
+
+    // NOTE: default matches to pop, which gets used if matches is the default (0) for pop()
+    const size_t matchesToPop;
 
     std::vector<BubbleCell> board;
 
