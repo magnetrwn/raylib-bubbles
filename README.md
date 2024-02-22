@@ -32,8 +32,8 @@ The game is structured in a way that allows for easy modification and extension.
 
 The following libraries are used in the project:
 
-+ **`raylib.h`**: Graphics and input.
-+ **`inipp.h`**: Configuration file parsing (header-only).
++ **[Raylib](https://www.raylib.com/)**: Graphics and input.
++ **[inipp.h](https://github.com/mcmtroffaes/inipp)**: Configuration file parsing (header-only).
 
 To summarize the structure of the project, here is a short description of each header file, pretty much top to bottom:
 
