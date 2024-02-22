@@ -1,5 +1,4 @@
 #include "util.hpp"
-#include <string>
 
 std::string GameUtils::getExecutablePath() {
     // NOTE: linux only, here is a comment from unistd.h on readlink():

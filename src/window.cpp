@@ -1,5 +1,4 @@
 #include "window.hpp"
-#include <raylib.h>
 
 constexpr const char* GameWindow::BUBBLE_TEX_PATHS[BUBBLE_TEX_COUNT];
 
