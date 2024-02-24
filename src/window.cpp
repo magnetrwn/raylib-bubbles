@@ -43,13 +43,16 @@ void GameWindow::run() {
         { static_cast<float>(width), static_cast<float>(height) }, 
         { static_cast<float>(bgTexs[0].width), static_cast<float>(bgTexs[0].height) }
     );
+    size_t bgSelected = 0;
     #endif
 
     while (!WindowShouldClose()) {
         BeginDrawing();
 
             #ifdef DEBUG_LISSAJOUS
-            DrawTextureEx(bgTexs[0], { -lissajous.step().x, -lissajous.step().y }, 0.0f, 1.0f, DARKGRAY);
+            DrawTextureEx(bgTexs[bgSelected], { -lissajous.step().x, -lissajous.step().y }, 0.0f, 1.0f, DARKGRAY);
+            if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
+                bgSelected = (bgSelected + 1) % bgTexs.size();
             #else
             ClearBackground(BLACK);
             #endif
