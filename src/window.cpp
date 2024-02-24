@@ -21,6 +21,8 @@ GameWindow::~GameWindow() {
     UnloadFont(font);
     for (const Texture2D& tex : bubbleTexs)
         UnloadTexture(tex);
+    for (const Texture2D& tex : bgTexs)
+        UnloadTexture(tex);
     CloseWindow();
 }
 
@@ -35,9 +37,21 @@ void GameWindow::run() {
     double lastTime = GetTime();
     #endif
 
+    #ifdef DEBUG_LISSAJOUS
+    LissajousView lissajous(0.14f, 0.22f, 1.15f, 
+        { static_cast<float>(width), static_cast<float>(height) }, 
+        { static_cast<float>(bgTexs[0].width), static_cast<float>(bgTexs[0].height) }
+    );
+    #endif
+
     while (!WindowShouldClose()) {
         BeginDrawing();
+        
+            #ifdef DEBUG_LISSAJOUS
+            DrawTextureEx(bgTexs[0], { -lissajous.step().x, -lissajous.step().y }, 0.0f, 1.0f, WHITE);
+            #else
             ClearBackground(BLACK);
+            #endif
             
             drawBoard();
 
@@ -139,6 +153,11 @@ void GameWindow::loadTextures() {
     std::string path;
     while (std::getline(bubbleTexPaths, path, ':')) {
         bubbleTexs.push_back(LoadTexture((GameUtils::getAbsDir() + path).c_str()));
+    }
+
+    std::istringstream bgTexPaths(GameUtils::getCfgStr("Game.Window.Background", "TEX_PATHS"));
+    while (std::getline(bgTexPaths, path, ':')) {
+        bgTexs.push_back(LoadTexture((GameUtils::getAbsDir() + path).c_str()));
     }
 }
 

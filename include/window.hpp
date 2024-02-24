@@ -10,6 +10,7 @@
 #include "action.hpp"
 #include "board.hpp"
 #include "util.hpp"
+#include "lissajous.hpp"
 
 class GameWindow {
 public:
@@ -31,6 +32,7 @@ protected:
 
     Font font;
     std::vector<Texture2D> bubbleTexs;
+    std::vector<Texture2D> bgTexs;
 
     GameBoard board;
     GameActionMgr actions;
