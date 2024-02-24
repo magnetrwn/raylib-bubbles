@@ -38,7 +38,7 @@ The following libraries are used in the project:
 To summarize the structure of the project, here is a short description of each header file, pretty much top to bottom:
 
 + **`include/window.hpp`**: Manages the window and contains the Raylib game loop. **This is the only header that interacts with Raylib, all others are independent and repurposable.**
-+ **`include/action.hpp`**: Acts as a queue for animations to be applied consecutively, while keeping track of their state and referencing the board.
++ **`include/action.hpp`**: Acts as a list for animations to be applied concurrently and detached to the game state, while keeping track of their action state and referencing the board.
 + **`include/game.hpp`**: **TODO**
 + **`include/board.hpp`**: Provides a way to build an hexagonal grid of bubbles and to manipulate it through a straightforward API.
 + **`include/util.hpp`**: Contains static utilities.
