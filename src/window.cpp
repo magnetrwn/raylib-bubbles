@@ -39,11 +39,11 @@ void GameWindow::run() {
     #endif
 
     #ifdef DEBUG_LISSAJOUS
+    size_t bgSelected = 0;
     LissajousView lissajous(0.074f, 0.22f, 1.15f, 
         { static_cast<float>(width), static_cast<float>(height) }, 
-        { static_cast<float>(bgTexs[0].width), static_cast<float>(bgTexs[0].height) }
+        { static_cast<float>(bgTexs[bgSelected].width), static_cast<float>(bgTexs[bgSelected].height) }
     );
-    size_t bgSelected = 0;
     #endif
 
     while (!WindowShouldClose()) {
@@ -51,8 +51,13 @@ void GameWindow::run() {
 
             #ifdef DEBUG_LISSAJOUS
             DrawTextureEx(bgTexs[bgSelected], { -lissajous.step().x, -lissajous.step().y }, 0.0f, 1.0f, DARKGRAY);
-            if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
+            if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
+                lissajous.change(
+                    { static_cast<float>(width), static_cast<float>(height) }, 
+                    { static_cast<float>(bgTexs[bgSelected].width), static_cast<float>(bgTexs[bgSelected].height) }
+                );
                 bgSelected = (bgSelected + 1) % bgTexs.size();
+            }
             #else
             ClearBackground(BLACK);
             #endif
@@ -159,6 +164,7 @@ void GameWindow::loadTextures() {
         bubbleTexs.push_back(LoadTexture((GameUtils::getAbsDir() + path).c_str()));
     }
 
+    // TODO: loading backgrounds as textures takes up a lot more VRAM, should use images (RAM) instead, then move to texture only the current bg
     std::istringstream bgTexPaths(GameUtils::getCfgStr("Game.Window.Background", "TEX_PATHS"));
     while (std::getline(bgTexPaths, path, ':')) {
         bgTexs.push_back(LoadTexture((GameUtils::getAbsDir() + path).c_str()));
