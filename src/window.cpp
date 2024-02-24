@@ -1,4 +1,5 @@
 #include "window.hpp"
+#include <raylib.h>
 
 /* --- initialization --- */
 
@@ -38,7 +39,7 @@ void GameWindow::run() {
     #endif
 
     #ifdef DEBUG_LISSAJOUS
-    LissajousView lissajous(0.14f, 0.22f, 1.15f, 
+    LissajousView lissajous(0.074f, 0.22f, 1.15f, 
         { static_cast<float>(width), static_cast<float>(height) }, 
         { static_cast<float>(bgTexs[0].width), static_cast<float>(bgTexs[0].height) }
     );
@@ -46,9 +47,9 @@ void GameWindow::run() {
 
     while (!WindowShouldClose()) {
         BeginDrawing();
-        
+
             #ifdef DEBUG_LISSAJOUS
-            DrawTextureEx(bgTexs[0], { -lissajous.step().x, -lissajous.step().y }, 0.0f, 1.0f, WHITE);
+            DrawTextureEx(bgTexs[0], { -lissajous.step().x, -lissajous.step().y }, 0.0f, 1.0f, DARKGRAY);
             #else
             ClearBackground(BLACK);
             #endif
