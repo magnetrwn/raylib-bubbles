@@ -1,6 +1,9 @@
 version = 1
 
-exclude_patterns = ["build/res/**"]
+exclude_patterns = [
+  "build/res/**",
+  "lib/**"
+]
 
 [[analyzers]]
 name = "cxx"
