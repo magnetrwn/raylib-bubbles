@@ -81,6 +81,8 @@ Neighbor counting allows efficient popping of bubbles, since the game only check
 
 Available as a public member of `GameBoard`, the `BubbleCell` class is a simple container for bubble color (including empty space) and tracking the number of neighbors with non-empty bubble color. It provides operators to generate self-documenting code, but should not be used outside of the `GameBoard` abstraction.
 
+This is different from the `BubbleData` struct in `include/action.hpp`, which is used to keep status for animating bubbles and is not part of the board abstraction.
+
 ### [Action](include/action.hpp)
 
 An action is something that takes place on the window with bubbles, but is not snapped to the board grid. This is essential to allow effects and animations to be displayed.
@@ -92,5 +94,9 @@ More specifically, the queue is made up of `ActionType` objects, which identify 
 There is also a basic container struct `BubbleData`, which holds the state (coordinates, speed and hue) of a bubble during the animation.
 
 **Note:** The `GameActionMgr` uses a `std::forward_list` to keep track of actions instead of a `std::vector`, because the game loop will cause the manager to iterate over the list and occasionally prune actions. Also, it makes it straightforward by using `std::forward_list::remove_if` with a lambda.
+
+### [Lissajous](include/lissajous.hpp)
+
+The `LissajousView` class in `include/lissajous.hpp` is a simple class abstracting the state of a Lissajous curve, which is used to animate the background texture along the viewport (the visible screen area). This is why backgrounds are larger than the viewport. The arguments for the constructor `a`, `b`, and `d` are the parameters of the Lissajous curve.
 
 **TODO**
