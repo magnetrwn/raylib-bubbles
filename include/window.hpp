@@ -19,7 +19,7 @@ public:
 
     void run();
 
-    void drawText(const std::string text, const float x, const float y, const float scale = 1.0f, const Color color = WHITE);
+    void drawText(const std::string& text, const float x, const float y, const float scale = 1.0f, const Color& color = WHITE);
     void drawBubble(const float x, const float y, const size_t hue);
     void drawBoard();
     void drawActions();

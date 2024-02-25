@@ -116,7 +116,7 @@ void GameWindow::run() {
     }
 }
 
-void GameWindow::drawText(const std::string text, const float x, const float y, const float scale, const Color color) {
+void GameWindow::drawText(const std::string& text, const float x, const float y, const float scale, const Color& color) {
     DrawTextEx(font, text.c_str(), { x, y }, font.baseSize * scale, 1, color);
 }
 
