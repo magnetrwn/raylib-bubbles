@@ -1,6 +1,6 @@
 # Raylib Bubbles
 
-[![CodeFactor](https://www.codefactor.io/repository/github/magnetrwn/raylib-bubbles/badge)](https://www.codefactor.io/repository/github/magnetrwn/raylib-bubbles)
+[![CodeFactor](https://www.codefactor.io/repository/github/magnetrwn/raylib-bubbles/badge)](https://www.codefactor.io/repository/github/magnetrwn/raylib-bubbles) [![DeepSource](https://app.deepsource.com/gh/magnetrwn/raylib-bubbles.svg/?label=active+issues&show_trend=true&token=k0LxdMtn2JdcCFcNwl_0DyZp)](https://app.deepsource.com/gh/magnetrwn/raylib-bubbles/) [![DeepSource](https://app.deepsource.com/gh/magnetrwn/raylib-bubbles.svg/?label=resolved+issues&show_trend=true&token=k0LxdMtn2JdcCFcNwl_0DyZp)](https://app.deepsource.com/gh/magnetrwn/raylib-bubbles/) [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fmagnetrwn%2Fraylib-bubbles&count_bg=%239757D0&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 
 **TODO: gif here**
 
