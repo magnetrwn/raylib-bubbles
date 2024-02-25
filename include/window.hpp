@@ -31,8 +31,8 @@ protected:
     const float radius;
 
     Font font;
+    std::vector<Image> bgImgs;
     std::vector<Texture2D> bubbleTexs;
-    std::vector<Texture2D> bgTexs;
 
     GameBoard board;
     GameActionMgr actions;
@@ -41,6 +41,7 @@ protected:
 
     void initWindow();
     void loadFont();
+    void loadImages();
     void loadTextures();
 
     float getFitToWidthR() const;

@@ -16,8 +16,8 @@ add_definitions(-DCFG_RELATIVE_PATH=\"bubbles.ini\")
 add_definitions(-DPATH_BUFFER_SIZE=256)
 
 # Debug defines
-#add_definitions(-DDEBUG_MOUSESHOOTER)
-add_definitions(-DDEBUG_SPRINKLER)
+add_definitions(-DDEBUG_MOUSESHOOTER)
+#add_definitions(-DDEBUG_SPRINKLER)
 add_definitions(-DDEBUG_LISSAJOUS)
 
 add_compile_options(-Wall -Wextra -Wpedantic)

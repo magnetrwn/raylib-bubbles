@@ -15,6 +15,7 @@ GameWindow::GameWindow()
 
     initWindow();
     loadFont();
+    loadImages();
     loadTextures();
 }
 
@@ -22,8 +23,8 @@ GameWindow::~GameWindow() {
     UnloadFont(font);
     for (const Texture2D& tex : bubbleTexs)
         UnloadTexture(tex);
-    for (const Texture2D& tex : bgTexs)
-        UnloadTexture(tex);
+    for (const Image& img : bgImgs)
+        UnloadImage(img);
     CloseWindow();
 }
 
@@ -39,10 +40,12 @@ void GameWindow::run() {
     #endif
 
     #ifdef DEBUG_LISSAJOUS
+    // TODO: be ready for future dynamic loading using two Texture2D objects
     size_t bgSelected = 0;
+    Texture2D bgTex = LoadTextureFromImage(bgImgs[0]);
     LissajousView lissajous(0.074f, 0.22f, 1.15f, 
         { static_cast<float>(width), static_cast<float>(height) }, 
-        { static_cast<float>(bgTexs[bgSelected].width), static_cast<float>(bgTexs[bgSelected].height) }
+        { static_cast<float>(bgTex.width), static_cast<float>(bgTex.height) }
     );
     #endif
 
@@ -50,13 +53,15 @@ void GameWindow::run() {
         BeginDrawing();
 
             #ifdef DEBUG_LISSAJOUS
-            DrawTextureEx(bgTexs[bgSelected], { -lissajous.step().x, -lissajous.step().y }, 0.0f, 1.0f, DARKGRAY);
+            DrawTextureEx(bgTex, { -lissajous.step().x, -lissajous.step().y }, 0.0f, 1.0f, DARKGRAY);
             if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
                 lissajous.change(
                     { static_cast<float>(width), static_cast<float>(height) }, 
-                    { static_cast<float>(bgTexs[bgSelected].width), static_cast<float>(bgTexs[bgSelected].height) }
+                    { static_cast<float>(bgTex.width), static_cast<float>(bgTex.height) }
                 );
-                bgSelected = (bgSelected + 1) % bgTexs.size();
+                bgSelected = (bgSelected + 1) % bgImgs.size();
+                UnloadTexture(bgTex);
+                bgTex = LoadTextureFromImage(bgImgs[bgSelected]);
             }
             #else
             ClearBackground(BLACK);
@@ -157,18 +162,18 @@ void GameWindow::loadFont() {
                       GameUtils::getCfgSizeT("Game.Window.Font", "SIZE"), nullptr, 0);
 }
 
-void GameWindow::loadTextures() {
-    std::istringstream bubbleTexPaths(GameUtils::getCfgStr("Game.Window.Bubble", "TEX_PATHS"));
+void GameWindow::loadImages() {
     std::string path;
-    while (std::getline(bubbleTexPaths, path, ':')) {
-        bubbleTexs.push_back(LoadTexture((GameUtils::getAbsDir() + path).c_str()));
-    }
+    std::istringstream bgImgPaths(GameUtils::getCfgStr("Game.Window.Background", "TEX_PATHS"));
+    while (std::getline(bgImgPaths, path, ':'))
+        bgImgs.push_back(LoadImage((GameUtils::getAbsDir() + path).c_str()));
+}
 
-    // TODO: loading backgrounds as textures takes up a lot more VRAM, should use images (RAM) instead, then move to texture only the current bg
-    std::istringstream bgTexPaths(GameUtils::getCfgStr("Game.Window.Background", "TEX_PATHS"));
-    while (std::getline(bgTexPaths, path, ':')) {
-        bgTexs.push_back(LoadTexture((GameUtils::getAbsDir() + path).c_str()));
-    }
+void GameWindow::loadTextures() {
+    std::string path;
+    std::istringstream bubbleTexPaths(GameUtils::getCfgStr("Game.Window.Bubble", "TEX_PATHS"));
+    while (std::getline(bubbleTexPaths, path, ':'))
+        bubbleTexs.push_back(LoadTexture((GameUtils::getAbsDir() + path).c_str()));
 }
 
 float GameWindow::getFitToWidthR() const {
