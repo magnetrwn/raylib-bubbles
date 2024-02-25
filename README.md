@@ -1,5 +1,7 @@
 # Raylib Bubbles
 
+[![CodeFactor](https://www.codefactor.io/repository/github/magnetrwn/raylib-bubbles/badge)](https://www.codefactor.io/repository/github/magnetrwn/raylib-bubbles)
+
 **TODO: gif here**
 
 ## Description

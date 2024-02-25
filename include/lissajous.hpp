@@ -10,7 +10,7 @@ public:
         float y;
     };
 
-    LissajousView(const float a, const float b, const float d, const Float2 viewport, const Float2 background, const float speed = 0.02f) 
+    LissajousView(const float a, const float b, const float d, const Float2 viewport, const Float2 background, const float speed = 0.033f) 
         : a(a), b(b), d(d), speed(speed), viewport(viewport), background(background), t(0.0f) {}
 
     Float2 step();

@@ -64,7 +64,7 @@ void GameWindow::run() {
                 bgTex = LoadTextureFromImage(bgImgs[bgSelected]);
             }
             #else
-            ClearBackground(BLACK);
+            ClearBackground({14, 14, 56, 255});
             #endif
             
             drawBoard();
@@ -101,6 +101,7 @@ void GameWindow::run() {
             }
             #endif
 
+            // TODO: insert future game lost
             if (board.reachedBottom())
                 board.clear();
             
@@ -164,14 +165,14 @@ void GameWindow::loadFont() {
 
 void GameWindow::loadImages() {
     std::string path;
-    std::istringstream bgImgPaths(GameUtils::getCfgStr("Game.Window.Background", "TEX_PATHS"));
+    std::istringstream bgImgPaths(GameUtils::getCfgStr("Game.Window.Background", "PATHS"));
     while (std::getline(bgImgPaths, path, ':'))
         bgImgs.push_back(LoadImage((GameUtils::getAbsDir() + path).c_str()));
 }
 
 void GameWindow::loadTextures() {
     std::string path;
-    std::istringstream bubbleTexPaths(GameUtils::getCfgStr("Game.Window.Bubble", "TEX_PATHS"));
+    std::istringstream bubbleTexPaths(GameUtils::getCfgStr("Game.Window.Bubble", "PATHS"));
     while (std::getline(bubbleTexPaths, path, ':'))
         bubbleTexs.push_back(LoadTexture((GameUtils::getAbsDir() + path).c_str()));
 }
