@@ -97,6 +97,6 @@ There is also a basic container struct `BubbleData`, which holds the state (coor
 
 ### [Lissajous](include/lissajous.hpp)
 
-The `LissajousView` class in `include/lissajous.hpp` is a simple class abstracting the state of a Lissajous curve, which is used to animate the background texture along the viewport (the visible screen area). This is why backgrounds are larger than the viewport. The arguments for the constructor `a`, `b`, and `d` are the parameters of the Lissajous curve.
+The `LissajousView` class in `include/lissajous.hpp` is a simple class abstracting the state of a Lissajous curve, which is used to animate the background texture along the viewport (the visible screen area). This is why backgrounds are larger than the viewport. The Lissajous curve is defined by the parameters encapsulated in the `LissajousInit` struct, which is used to initialize the curve.
 
 **TODO**

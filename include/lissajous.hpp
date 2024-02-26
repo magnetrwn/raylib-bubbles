@@ -5,24 +5,28 @@
 
 class LissajousView {
 public:
+    struct LissajousInit {
+        float a;
+        float b;
+        float delta;
+        float speed;
+    };
+
     struct Float2 {
         float x;
         float y;
     };
 
-    LissajousView(const float a, const float b, const float d, const Float2 viewport, const Float2 background, const float speed = 0.033f) 
-        : a(a), b(b), d(d), speed(speed), viewport(viewport), background(background), t(0.0f) {}
+    LissajousView(const LissajousInit params, const Float2 viewport, const Float2 background) 
+        : params(params), viewport(viewport), background(background), t(0.0f) {}
 
     Float2 step();
 
     void change(const Float2 viewport, const Float2 background);
 
 protected:
-    const float a;
-    const float b;
-    const float d;
-    const float speed;
-    
+    const LissajousInit params;
+
     Float2 viewport;
     Float2 background;
 

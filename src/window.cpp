@@ -1,5 +1,4 @@
 #include "window.hpp"
-#include <raylib.h>
 
 /* --- initialization --- */
 
@@ -43,7 +42,8 @@ void GameWindow::run() {
     // TODO: be ready for future dynamic loading using two Texture2D objects
     size_t bgSelected = 0;
     Texture2D bgTex = LoadTextureFromImage(bgImgs[0]);
-    LissajousView lissajous(0.074f, 0.22f, 1.15f, 
+    LissajousView lissajous(
+        { 0.074f, 0.22f, 1.15f, 0.033f },
         { static_cast<float>(width), static_cast<float>(height) }, 
         { static_cast<float>(bgTex.width), static_cast<float>(bgTex.height) }
     );
