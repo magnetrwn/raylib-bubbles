@@ -37,13 +37,16 @@ The following libraries are used in the project:
 + **[Raylib](https://www.raylib.com/)**: Graphics and input.
 + **[inipp.h](https://github.com/mcmtroffaes/inipp)**: Configuration file parsing (header-only).
 
-To summarize the structure of the project, here is a short description of each header file, pretty much top to bottom:
+To summarize the structure of the project, here is a short description of each header file, in alphabetical order:
 
-+ **`include/window.hpp`**: Manages the window and contains the Raylib game loop. **This is the only header that interacts with Raylib, all others are independent and repurposable.**
-+ **`include/action.hpp`**: Acts as a list for animations to be applied concurrently and detached to the game state, while keeping track of their action state and referencing the board.
-+ **`include/game.hpp`**: **TODO**
-+ **`include/board.hpp`**: Provides a way to build an hexagonal grid of bubbles and to manipulate it through a straightforward API.
-+ **`include/util.hpp`**: Contains static utilities.
+| Include Header | Description |
+| -------------- | ----------- |
+| **`include/action.hpp`** | Acts as a list for animations to be applied concurrently and detached to the game state, while keeping track of their action state and referencing the board. |
+| **`include/board.hpp`** | Provides a way to build an hexagonal grid of bubbles and to manipulate it through a straightforward API. |
+| **`include/game.hpp`** | **TODO** |
+| **`include/lissajous.hpp`** | Provides state object for Lissajous curves. |
+| **`include/util.hpp`** | Contains static utilities. |
+| **`include/window.hpp`** | Manages the window and contains the Raylib game loop. **This is the only header that interacts with Raylib, all others are independent and repurposable.** |
 
 An extended description of each building block of the game can be found in the [Technical Summary](#technical-summary) section.
 
@@ -87,7 +90,7 @@ This is different from the `BubbleData` struct in `include/action.hpp`, which is
 
 An action is something that takes place on the window with bubbles, but is not snapped to the board grid. This is essential to allow effects and animations to be displayed.
 
-The `GameActionMgr` class in `include/action.hpp` handles a queue of actions, which are applied consecutively. Each action has a state, and the queue is abstracted to be processed in the game loop transparently. The state of each action is stepped on every cycle, and eventually *pruned* when the action has left the visible screen area, or `pruneFlag` is raised. The action is removed from the queue when it is done.
+The `GameActionMgr` class in `include/action.hpp` handles a list of actions, which are applied concurrently. Each action has a state, and the queue is abstracted to be processed in the game loop transparently. The state of each action is stepped on every cycle, and eventually *pruned* when the action has left the visible screen area, or `pruneFlag` is raised. The action is removed from the queue when it is done.
 
 More specifically, the queue is made up of `ActionType` objects, which identify each action through an enum class, while keeping track of their parent manager and allowing to check their state, as well as their board location.
 

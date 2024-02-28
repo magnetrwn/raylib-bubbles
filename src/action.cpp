@@ -17,10 +17,11 @@ void GameActionMgr::ActionType::step() {
         if (GameUtils::clamp(bubbleData[0].y, 0.0f, parent.height + 2 * parent.radius))
             bubbleData[0].yVel *= -1;
 
+        // TODO: make two horizontally separate points, that must both be in the same bubble cell to allow updating!
         const size_t row = GameUtils::yToRow(bubbleData[0].y + parent.radius, parent.radius);
         const size_t col = GameUtils::xyToCol(bubbleData[0].x + parent.radius, bubbleData[0].y, parent.radius);
 
-        if (!parent.board.oob(row, col) and !sameAsLastRowCol(row, col))
+        if (!parent.board.oob(row, col) and !repeated(row, col))
             pruneFlag = parent.board.update(row, col, bubbleData[0].hue);
     }
 }
@@ -31,7 +32,7 @@ bool GameActionMgr::ActionType::shouldPrune() const {
     }) or pruneFlag; // TODO: unclear, should clarify that either off screen coords or pruneFlag cause pruning
 }
 
-bool GameActionMgr::ActionType::sameAsLastRowCol(const size_t row, const size_t col) {
+bool GameActionMgr::ActionType::repeated(const size_t row, const size_t col) {
     if (hasLast and lastRow == row and lastCol == col)
         return true;
 

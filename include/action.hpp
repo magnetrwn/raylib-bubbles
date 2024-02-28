@@ -31,7 +31,7 @@ public:
 
         bool pruneFlag;
 
-        // NOTE: for sameAsLastRowCol()
+        // NOTE: for repeated(), prevents repeat checking of same row-column
         bool hasLast;
         size_t lastRow;
         size_t lastCol;
@@ -42,7 +42,7 @@ public:
         void step();
 
         bool shouldPrune() const;
-        bool sameAsLastRowCol(const size_t row, const size_t col);
+        bool repeated(const size_t row, const size_t col);
     };
 
     GameActionMgr(const float width, const float height, const float radius, GameBoard& board)
