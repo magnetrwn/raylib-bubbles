@@ -69,6 +69,8 @@ As mentioned earlier, there will also be a zipped build generated in the root pr
 
 Please make sure to **read the [CONTRIBUTING.md](CONTRIBUTING.md) file** for relevant information on how to contribute to the project.
 
+When contributing, adhere to the code style and Gitflow branching guidelines outlined in the file.
+
 If you wish to discuss contributions or talk about the project in a more detached manner, please use the *Discussions* tab.
 
 ## Technical Summary

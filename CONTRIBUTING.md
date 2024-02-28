@@ -8,14 +8,24 @@ If you find inconsistencies, bugs, or other problems, consider creating an issue
 
 **Note:** for comments, please use the *Discussions* tab instead!
 
+### Gitflow Overview
+
+We use the **Gitflow Workflow** for managing branches and pull requests. The main branches are:
+
++ **Main Branch:** Our production-ready state.
++ **Develop Branch:** Our primary development branch. All features are merged here before being released to the main branch.
++ **Feature Branches:** Branch off from `develop` when working on new features.
+
 ### Opening a Pull Request
 
-+ **Fork** the repo,
-+ **Clone** the forked repo to your local machine.
-+ Create a new **branch** for your contribution: `git checkout -b feature`,
-+ Make your changes and **commit** them: `git commit -m 'Added new feature'`,
-+ **Push** the changes to your fork: `git push origin feature`,
-+ Create a **pull request** on the main repo.
++ *Fork* the repo.
++ *Clone* the forked repo to your local machine.
++ Checkout the `develop` branch: `git checkout develop`.
++ Update your local `develop` branch: `git pull origin develop`.
++ Create a new branch for your feature change: `git checkout -b feature/your_feature_name`. You can change `feature` to `bugfix` or `docsfix` if you are fixing a bug or a documentation error, respectively.
++ Make your changes and *commit* them: `git commit -m 'Added new feature'`.
++ *Push* the changes to your fork: `git push origin feature/your_feature_name`.
++ Create a *pull request* targeting the `develop` branch on the main repo.
 
 ### Code Style
 
@@ -23,7 +33,7 @@ If you find inconsistencies, bugs, or other problems, consider creating an issue
 | ---- | ----------- |
 | Brace Style | Use **K&R brace placement** for functions, classes, and control statements. |
 | Indentation | Use **4 spaces** for indentation. Drop long initializer lists at one indent. |
-| Naming Conventions | Use **`camelCase`** for variables and functions, and **`PascalCase`** for class names. |
+| Naming Conventions | Use **`camelCase`** for variables and methods, and **`PascalCase`** for class names. |
 | New Files | Use **LF line endings**, keep exactly one newline at the end of each file, use extension **`.hpp`** for C++ headers and **`.cpp`** for C++ source files. |
 | Commenting | Short comments for complex logic are encouraged for public interfaces and significant private methods, using **`// NOTE:`** or **`// TODO:`** for important notes and tasks, but **please document the code in `README.md`** instead of in the code itself. |
 
