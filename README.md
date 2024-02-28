@@ -15,6 +15,7 @@ The game is written in C++11 and is built with CMake. It is intended to be a **w
 + [Installation](#installation)
 + [Overview](#overview)
 + [Build Details](#build-details)
++ [Contributing](#contributing)
 + [Technical Summary](#technical-summary)
 
 ### Installation
@@ -63,6 +64,12 @@ The `build` folder contains all files to bundle with the compiled executable. Af
 As mentioned earlier, there will also be a zipped build generated in the root project directory, with the name `bubbles_build[timestamp].zip`. It contains all necessary files to run the game.
 
 **Note:** The build resources such as fonts and textures may fall under a different license, please check the related folders for license information.
+
+## Contributing
+
+Please make sure to **read the [CONTRIBUTING.md](CONTRIBUTING.md) file** for relevant information on how to contribute to the project.
+
+If you wish to discuss contributions or talk about the project in a more detached manner, please use the *Discussions* tab.
 
 ## Technical Summary
 
