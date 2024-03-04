@@ -32,7 +32,9 @@ We use the **Gitflow Workflow** for managing branches and pull requests. The mai
 | Rule | Description |
 | ---- | ----------- |
 | Brace Style | Use **K&R brace placement** for functions, classes, and control statements. |
-| Indentation | Use **4 spaces** for indentation. Drop long initializer lists at one indent. |
+| Indentations | Use **4 spaces** for indentation. Drop long initializer lists at one indent. |
+| Declarations | Follow **Google C++ Style**, use separate lines. |
+| Access Modifiers | Follow **Google C++ Style**, use separate lines. |
 | Naming Conventions | Use **`camelCase`** for variables and methods, and **`PascalCase`** for class names. |
 | New Files | Use **LF line endings**, keep exactly one newline at the end of each file, use extension **`.hpp`** for C++ headers and **`.cpp`** for C++ source files. |
 | Commenting | Short comments for complex logic are encouraged for public interfaces and significant private methods, using **`// NOTE:`** or **`// TODO:`** for important notes and tasks, but **please document the code in `README.md`** instead of in the code itself. |
