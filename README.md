@@ -24,7 +24,7 @@ To get started, follow these steps:
 
 + Clone the repository with `git clone https://github.com/magnetrwn/raylib-bubbles.git`.
 + Install Raylib, which can be done on Debian by running `sudo apt install raylib`.
-+ Build with `./build.sh`, and check the `build` directory for the executable, or the zipped build `bubbles_build[timestamp].zip`.
++ Build with `./build.sh`, and check the `build` directory for the built executable, or the zipped bundle `dist/bubbles_build[timestamp].zip`.
 + Run `./bubbles` to start the game.
 
 For instructions on how to play, see the [instructions file](build/INSTRUCTIONS.md) in the build folder.
@@ -53,7 +53,7 @@ An extended description of each building block of the game can be found in the [
 
 ### Build Details
 
-The `build` folder contains all files to bundle with the compiled executable. After running `./build.sh`, which will run `cmake` among things, the executable will be placed alongside resources and files to include with it:
+The `static` folder contains all files to bundle with the compiled executable. After running `./build.sh`, which will run `cmake` among things, the executable will be placed alongside resources and files to include with it:
 
 + `res/`: Contains the fonts and textures used in the game.
 + `bubbles`: The compiled executable.
@@ -61,7 +61,7 @@ The `build` folder contains all files to bundle with the compiled executable. Af
 + `INSTRUCTIONS.md`: A file containing instructions on how to play the game.
 + `LICENSE`: The license file for the game, same as the project license.
 
-As mentioned earlier, there will also be a zipped build generated in the root project directory, with the name `bubbles_build[timestamp].zip`. It contains all necessary files to run the game.
+As mentioned earlier, there will also be a zipped build generated in the `dist` project directory, with the name `bubbles_build[timestamp].zip`. It contains all necessary files to run the game.
 
 **Note:** The build resources such as fonts and textures may fall under a different license, please check the related folders for license information.
 
