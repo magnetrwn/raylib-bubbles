@@ -22,7 +22,7 @@ We use the **Gitflow Workflow** for managing branches and pull requests. The mai
 + *Clone* the forked repo to your local machine.
 + Checkout the `develop` branch: `git checkout develop`.
 + Update your local `develop` branch: `git pull origin develop`.
-+ Create a new branch for your feature change: `git checkout -b feature/your_feature_name`. You can change `feature` to `bugfix` or `docsfix` if you are fixing a bug or a documentation error, respectively.
++ Create a new branch for your feature change: `git checkout -b feature/your_feature_name`. You can change `feature` to `refactor`, `bugfix` or `docsfix`, whichever fits best.
 + Make your changes and *commit* them: `git commit -m 'Added new feature'`.
 + *Push* the changes to your fork: `git push origin feature/your_feature_name`.
 + Create a *pull request* targeting the `develop` branch on the main repo.
@@ -35,7 +35,7 @@ We use the **Gitflow Workflow** for managing branches and pull requests. The mai
 | Indentation | Use **4 spaces** for indentation. Drop long initializer lists at one indent. |
 | Naming Conventions | Use **`camelCase`** for variables and methods, and **`PascalCase`** for class names. |
 | New Files | Use **LF line endings**, keep exactly one newline at the end of each file, use extension **`.hpp`** for C++ headers and **`.cpp`** for C++ source files. |
-| Commenting | Short comments for complex logic are encouraged for public interfaces and significant private methods, using **`// NOTE:`** or **`// TODO:`** for important notes and tasks, but **please document the code in `README.md`** instead of in the code itself. |
+| Commenting | Short comments for complex logic are encouraged for public interfaces and significant private methods, using **`// NOTE:`** or **`// TODO:`** for important notes and tasks, but **please document the code in `README.md`** instead of being verbose in the code itself. |
 
 ### Non-Code Contributions
 
