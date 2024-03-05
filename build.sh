@@ -1,16 +1,21 @@
 #!/usr/bin/sh
-# NOTE: you probably should comment out clearing CMake cache files if you need to compile multiple times.
-
 set -e
+
+BUILD_FILENAME="bubbles_build$(date +%s).zip"
+
+mkdir -p build dist
+rsync -a static/ build/
 
 cd build
 [ -f bubbles ] && rm bubbles
 cmake ..
 make
-rm ../bubbles_build*.zip 2> /dev/null || true
-rm -r CMakeFiles cmake_install.cmake CMakeCache.txt Makefile 2> /dev/null || true
-mv compile_commands.json ../
-cd ..
-zip -dc -r "bubbles_build$(date +%s).zip" build
+zip -dc -r -9 "$BUILD_FILENAME" bubbles
+mv "$BUILD_FILENAME" ../dist
+cp compile_commands.json ../
 
+cd ../static
+zip -dc -r -9 ../dist/"$BUILD_FILENAME" ./*
+
+cd ..
 LSAN_OPTIONS="verbosity=1:log_threads=1" build/bubbles
